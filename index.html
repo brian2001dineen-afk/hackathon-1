@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here" />
+    <!-- BS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.8/css/bootstrap.min.css">
+    <!-- FA -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Personal styling -->
+    <link rel="stylesheet" href="assets/css/_style.css">
+    <!-- Hack font -->
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css'>
+    <title>@arcade</title>
+</head>
+
+<body>
+
+    <header>
+
+    </header>
+
+    <main>
+
+        <!-- Terminal section -->
+        <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+            <section id="terminal-lobby" class="w-100" aria-label="Game lobby terminal">
+                <div class="terminal mx-auto">
+                    <div class="terminal-header d-flex align-items-baseline justify-content-between px-3 py-2">
+                        <div class="d-flex gap-2">
+                            <span class="terminal-name" aria-hidden="true">shell</span>
+                        </div>
+                        <div class="terminal-title text-truncate">Lobby</div>
+                        <div style="width:56px" aria-hidden="true"></div>
+                    </div>
+                    <div id="terminal-output" class="terminal-body" role="log" aria-live="polite" aria-atomic="false">
+                    </div>
+                    <form id="terminal-form" class="terminal-input-line d-flex align-items-center" autocomplete="off"
+                        spellcheck="false">
+                        <label for="terminal-input" class="prompt me-2">guest@arcade:~$</label>
+                        <input id="terminal-input" class="form-control flex-grow-1 terminal-input" type="text"
+                            placeholder="Type a command and press Enter" aria-label="Terminal command input">
+                        <button class="visually-hidden" type="submit" aria-hidden="true">Submit</button>
+                    </form>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button id="openMenuBtn" type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#menuModal" aria-controls="menuModal">
+                        Open Graphical Menu
+                    </button>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+
+
+    <!-- Footer (leaving empty for now) -->
+    <footer>
+
+    </footer>
+
+    <!-- Graphical Menu Modal -->
+    <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title" id="menuModalLabel">Game Menu</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="gameList" class="list-group list-group-flush">
+                        <!-- Populated by script.js to keep in sync with terminal commands -->
+                    </div>
+                </div>
+                <!-- <div class="modal-footer border-secondary">
+                    <small class="text-secondary">Tip: use commands like <code>list</code>, <code>help</code>, or
+                        <code>play snake</code>.</small>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main script -->
+    <script src="assets/js/_script.js"></script>
+    <!-- Fontawesome kit -->
+    <script src="https://kit.fontawesome.com/b2a9a53cd1.js" crossorigin="anonymous"></script>
+    <!-- Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <!-- Bootstrap script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.8/js/bootstrap.min.js"></script>
+</body>
+
+</html>
