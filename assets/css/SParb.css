@@ -4,7 +4,9 @@
 }
 
 canvas {
-    width: 80%;
+    
     image-rendering: pixelated;
+    background-color: lightgray;
+    outline: black 2px solid;
 }
 
