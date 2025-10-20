@@ -3,32 +3,42 @@ let c = canvas.getContext("2d");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
-const playerSize = 40; // Size of Player
+const playerSize = 30; // Size of Player
 const playerStep = 1; // Speed of Player
 const playerKeys = {};
+const playerColour = "blue"
 let carsList = [];
+let hit = false;
 
 // Player starting cooridinates
-let playerX = (canvasWidth / 2) - (playerSize / 2);  // place player start in middle of screen
-let playerY = canvasHeight - playerSize - 10; // place player start at bottom of screen
+const playerXStart = canvasWidth / 2 - playerSize / 2; // place player start in middle of screen
+const playerYStart = canvasHeight - playerSize - 20; // place player start at bottom of screen
+let playerX = playerXStart;
+let playerY = playerYStart;
 
 console.log(canvas);
 
-/** Draw the player controlled object */ 
+/** Draw the player controlled object */
 function drawPlayer() {
-    c.fillStyle = "blue";
-    c.clearRect(0, 0, canvasWidth, canvasHeight);
-    c.fillRect(Math.round(playerX), Math.round(playerY), playerSize, playerSize);
+    c.fillStyle = playerColour;
+    c.fillRect(
+        Math.round(playerX),
+        Math.round(playerY),
+        playerSize,
+        playerSize
+    );
 }
 
 /** Draw the car objects */
 function drawCars(cars) {
     c.fillStyle = cars.colour; // Rectangle color
-    c.fillRect(cars.x, cars.y, cars.width, cars.height); // x, y, width, height
-};
+    c.fillRect(Math.round(cars.x), Math.round(cars.y), cars.width, cars.height); // x, y, width, height
+}
 
 /** Update player position based on keys pressed and car positions over time */
 function updatePositions(cars) {
+
+    c.clearRect(0, 0, canvasWidth, canvasHeight); // Clear canvas once per frame for smoothness
     if (playerKeys["ArrowUp"]) playerY -= playerStep;
     if (playerKeys["ArrowDown"]) playerY += playerStep;
     if (playerKeys["ArrowLeft"]) playerX -= playerStep;
@@ -37,10 +47,18 @@ function updatePositions(cars) {
     playerX = Math.min(Math.max(playerX, 0), canvasWidth - playerSize);
     playerY = Math.min(Math.max(playerY, 0), canvasHeight - playerSize);
 
+    cars.forEach((car) => checkCollision(car)) 
+    if (hit){
+        playerX = playerXStart;
+        playerY = playerYStart; // send player back to start
+        hit = false;
+    }
     drawPlayer();
     cars.forEach((car) => updateCarPositions(car));
     cars.forEach((car) => drawCars(car));
+
     requestAnimationFrame(() => updatePositions(cars));
+      
 }
 
 /** Update cars position */
@@ -53,8 +71,14 @@ function updateCarPositions(car) {
     }
 }
 
+/**Check if player collides with a car */
 function checkCollision(cars) {
-    
+    if (playerX + playerSize >= cars.x && 
+        playerX <= cars.x +cars.width &&
+        playerY + playerSize >= cars.y &&
+        playerY <= cars.y + cars.height) {
+        hit = true;
+    }
 }
 
 //Listen for user key presses
@@ -75,12 +99,14 @@ function createCar(x, y, width, height, speed, colour) {
     this.speed = speed;
     this.colour = colour;
     this.direction = 1;
-};
+}
 
-const car1 = new createCar(50, 200, 60, 40, 2, "red")
-carsList.push(car1)
-const car2 = new createCar(150, 300, 60, 40, 3, "green")
-carsList.push(car2)
+const car1 = new createCar(50, 100, 80, 40, 2, "red");
+carsList.push(car1);
+const car2 = new createCar(150, 200, 60, 40, 3, "yellow");
+carsList.push(car2);
+const car3 = new createCar(150, 300, 80, 40, 2.5, "green");
+carsList.push(car3);
 
 // Start game loops
 drawPlayer();
