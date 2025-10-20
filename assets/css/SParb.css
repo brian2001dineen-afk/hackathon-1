@@ -6,7 +6,7 @@
 canvas {
     
     image-rendering: pixelated;
-    background-color: lightgray;
+    background-color: lightgreen;
     outline: black 2px solid;
 }
 

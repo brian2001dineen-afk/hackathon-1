@@ -4,7 +4,18 @@ let c = canvas.getContext("2d");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
-deaths = 0;
+let deaths = 0;
+const carColours = [
+    "red",
+    "cyan",
+    "yellow",
+    "green",
+    "purple",
+    "orange",
+    "white",
+    "black",
+];
+const carDirections = [1, -1];
 
 const playerSize = 30; // Size of Player
 const playerStep = 1; // Speed of Player
@@ -32,18 +43,8 @@ function drawPlayer() {
     );
 }
 
-/** Draw the car objects and roads */
-function drawCars(cars) {
-    c.fillStyle = "gray";
-    c.fillRect(0, Math.round(cars.y) -20, canvasWidth ,80);
-
-    c.fillStyle = cars.colour; // Rectangle color
-    c.fillRect(Math.round(cars.x), Math.round(cars.y), cars.width, cars.height); // x, y, width, height
-
-}
-
 /** Update player position based on keys pressed and car positions over time */
-function updatePositions(cars) {
+function updatePositions() {
     c.clearRect(0, 0, canvasWidth, canvasHeight); // Clear canvas once per frame for smoothness
 
     //Make the player move when keys are pressed
@@ -56,33 +57,42 @@ function updatePositions(cars) {
     playerX = Math.min(Math.max(playerX, 0), canvasWidth - playerSize);
     playerY = Math.min(Math.max(playerY, 0), canvasHeight - playerSize);
 
-    cars.forEach((car) => updateCarPositions(car));
-    cars.forEach((car) => checkCollision(car));
-
+    carsList.forEach((car) => updateCarPositions(car));
+    carsList = carsList.filter(car => car.y < canvasHeight + car.height); // delete cars and roads when they go offscreen
+    addNewCar(); // add a new car at the top of the page if there is space
+    carsList.forEach((car) => checkCollision(car));
     if (hit) {
-        deaths += 1
+        deaths += 1;
         crashesCounter.innerText = "Crashes: " + deaths;
-        crashes
+        crashes;
         playerX = playerXStart;
         playerY = playerYStart; // send player back to start
         hit = false;
     }
-
     //draw the assets
-    cars.forEach((car) => drawCars(car));
+    carsList.forEach((car) => drawCars(car));
     drawPlayer();
-    requestAnimationFrame(() => updatePositions(cars)); //cause the cars too move more smoothly
+    requestAnimationFrame(() => updatePositions()); //cause the cars too move more smoothly
+}
+
+/** Draw the car objects and roads */
+function drawCars(cars) {
+    c.fillStyle = "gray";
+    c.fillRect(0, Math.round(cars.y) - 20, canvasWidth, 80);
+
+    c.fillStyle = cars.colour; // Rectangle color
+    c.fillRect(Math.round(cars.x), Math.round(cars.y), cars.width, cars.height); // x, y, width, height
 }
 
 /** Update cars position */
 function updateCarPositions(car) {
     // Update car position
     car.x += car.speed * car.direction;
-    //car.y += 0.6 // Make the roads move downwards
-    // Bounce off left/right edges
-    if (car.x <= 0 - 200 ) {
+    car.y += 0.5 // Make the roads move downwards
+    // Make a car loop back onto the canvas if it drives off it
+    if (car.x <= 0 - 200) {
         car.x = canvasWidth + 200;
-    } else if (car.x >= canvasWidth + 200){
+    } else if (car.x >= canvasWidth + 200) {
         car.x = -200;
     }
 }
@@ -99,6 +109,16 @@ function checkCollision(cars) {
     }
 }
 
+/**Add a new card and road at the top if there is space */
+function addNewCar() {
+    const threshold = 40;
+    const carNearTop = carsList.some(car => car.y < threshold);
+    if (!carNearTop) {
+        const newCar = new createCar(-60); // Start just above the canvas
+        carsList.push(newCar);
+    }
+}
+
 //Listen for user key presses
 document.addEventListener("keydown", (event) => {
     playerKeys[event.key] = true;
@@ -108,27 +128,36 @@ document.addEventListener("keyup", (event) => {
     playerKeys[event.key] = false;
 });
 
-/** Create a car object */
-function createCar(x, y, width, height, speed, colour, direction) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.speed = speed;
-    this.colour = colour;
-    this.direction = direction;
+/** Return a random number between 2 integers */
+function getRandomNumber(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled);
 }
 
-const car1 = new createCar(canvasWidth, 100, 60, 40, 4, "red", -1);
+/** Create a car object */
+function createCar(y) {
+    this.x = Math.random() * canvasWidth;
+    this.y = y;
+    this.width = getRandomNumber(60, 100);
+    this.height = 40;
+    this.speed = getRandomNumber(2, 8) / 2;
+    this.colour = carColours[Math.floor(Math.random() * 8)];
+    this.direction = carDirections[getRandomNumber(0, 1)];
+}
+
+const car1 = new createCar(400);
 carsList.push(car1);
-const car2 = new createCar(0, 200, 80, 40, 2.5, "yellow", 1);
+const car2 = new createCar(300);
 carsList.push(car2);
-const car3 = new createCar(0, 300, 80, 40, 3, "green", 1);
+const car3 = new createCar(200);
 carsList.push(car3);
-const car4 = new createCar(canvasWidth, 400, 100, 40, 2, "purple", -1);
+const car4 = new createCar(100);
 carsList.push(car4);
+const car5 = new createCar(0);
+carsList.push(car5);
 
 // Start game loop
 carsList.forEach((car) => drawCars(car));
 drawPlayer();
-updatePositions(carsList);
+updatePositions();
