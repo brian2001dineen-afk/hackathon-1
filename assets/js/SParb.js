@@ -6,19 +6,11 @@ const canvasHeight = canvas.height;
 const playerSize = 40; // Size of Square
 const playerStep = 1; // Speed of square
 const playerKeys = {};
-let cars = [];
+let carsList = [];
 
 // Square starting cooridinates
 let x = (canvasWidth / 2) - (playerSize / 2);  // place player start in middle of screen
 let y = canvasHeight - playerSize - 10; // place player start at bottom of screen
-
-// Car starting coordinates
-let carX = 50;
-let carY = 200;
-let carWidth = 60;
-let carHeight = 40;
-let carSpeed = 2;
-let carDirection = 1; // 1 = right, -1 = left
 
 console.log(canvas);
 
@@ -30,7 +22,7 @@ function drawSquare() {
 }
 
 /** Update square position based on keys pressed */
-function updateSquarePosition(car) {
+function updatePositions(cars) {
     if (playerKeys["ArrowUp"]) y -= playerStep;
     if (playerKeys["ArrowDown"]) y += playerStep;
     if (playerKeys["ArrowLeft"]) x -= playerStep;
@@ -38,15 +30,20 @@ function updateSquarePosition(car) {
     // Clamp position to stay within canvas when step isnt divisible by the canvas dimentions
     x = Math.min(Math.max(x, 0), canvasWidth - playerSize);
     y = Math.min(Math.max(y, 0), canvasHeight - playerSize);
+
+    cars.forEach((car) => updateCarPositions(car));
+    drawSquare();
+    cars.forEach((car) => drawCars(car));
+    requestAnimationFrame(() => updatePositions(cars));
+}
+
+function updateCarPositions(car) {
     // Update car position
     car.x += car.speed * car.direction;
     // Bounce off left/right edges
     if (car.x <= 0 + 30 || car.x >= canvasWidth - car.width - 30) {
         car.direction *= -1;
     }
-    drawSquare();
-    drawCar(car1);
-    requestAnimationFrame(() => updateSquarePosition(car));
 }
 
 //Listen for user key presses
@@ -58,9 +55,10 @@ document.addEventListener("keyup", (event) => {
     playerKeys[event.key] = false;
 });
 
-function drawCar(car) {
-    c.fillStyle = car.colour; // Rectangle color
-    c.fillRect(car.x, car.y, car.width, car.height); // x, y, width, height
+/** Draw the car objects */
+function drawCars(cars) {
+    c.fillStyle = cars.colour; // Rectangle color
+    c.fillRect(cars.x, cars.y, cars.width, cars.height); // x, y, width, height
 };
 
 /** Create a car object */
@@ -75,10 +73,11 @@ function createCar(x, y, width, height, speed, colour) {
 };
 
 const car1 = new createCar(50, 200, 60, 40, 2, "red")
-console.log(car1.colour);
-
+carsList.push(car1)
+const car2 = new createCar(150, 300, 60, 40, 3, "green")
+carsList.push(car2)
 
 // Start loop
 drawSquare();
-drawCar(car1);
-updateSquarePosition(car1);
+carsList.forEach((car) => drawCars(car));
+updatePositions(carsList);
