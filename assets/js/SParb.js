@@ -1,12 +1,15 @@
 const canvas = document.querySelector("canvas");
+const crashesCounter = document.getElementById("crashes");
 let c = canvas.getContext("2d");
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
+deaths = 0;
+
 const playerSize = 30; // Size of Player
 const playerStep = 1; // Speed of Player
 const playerKeys = {};
-const playerColour = "blue"
+const playerColour = "blue";
 let carsList = [];
 let hit = false;
 
@@ -29,54 +32,69 @@ function drawPlayer() {
     );
 }
 
-/** Draw the car objects */
+/** Draw the car objects and roads */
 function drawCars(cars) {
+    c.fillStyle = "gray";
+    c.fillRect(0, Math.round(cars.y) -20, canvasWidth ,80);
+
     c.fillStyle = cars.colour; // Rectangle color
     c.fillRect(Math.round(cars.x), Math.round(cars.y), cars.width, cars.height); // x, y, width, height
+
 }
 
 /** Update player position based on keys pressed and car positions over time */
 function updatePositions(cars) {
-
     c.clearRect(0, 0, canvasWidth, canvasHeight); // Clear canvas once per frame for smoothness
+
+    //Make the player move when keys are pressed
     if (playerKeys["ArrowUp"]) playerY -= playerStep;
     if (playerKeys["ArrowDown"]) playerY += playerStep;
     if (playerKeys["ArrowLeft"]) playerX -= playerStep;
     if (playerKeys["ArrowRight"]) playerX += playerStep;
+
     // Clamp position to stay within canvas when step isnt divisible by the canvas dimentions
     playerX = Math.min(Math.max(playerX, 0), canvasWidth - playerSize);
     playerY = Math.min(Math.max(playerY, 0), canvasHeight - playerSize);
 
-    cars.forEach((car) => checkCollision(car)) 
-    if (hit){
+    cars.forEach((car) => updateCarPositions(car));
+    cars.forEach((car) => checkCollision(car));
+
+    if (hit) {
+        deaths += 1
+        crashesCounter.innerText = "Crashes: " + deaths;
+        crashes
         playerX = playerXStart;
         playerY = playerYStart; // send player back to start
         hit = false;
     }
-    drawPlayer();
-    cars.forEach((car) => updateCarPositions(car));
-    cars.forEach((car) => drawCars(car));
 
-    requestAnimationFrame(() => updatePositions(cars));
-      
+    //draw the assets
+    cars.forEach((car) => drawCars(car));
+    drawPlayer();
+    requestAnimationFrame(() => updatePositions(cars)); //cause the cars too move more smoothly
 }
 
 /** Update cars position */
 function updateCarPositions(car) {
     // Update car position
     car.x += car.speed * car.direction;
+    //car.y += 0.6 // Make the roads move downwards
     // Bounce off left/right edges
-    if (car.x <= 0 + 30 || car.x >= canvasWidth - car.width - 30) {
-        car.direction *= -1;
+    if (car.x <= 0 - 200 ) {
+        car.x = canvasWidth + 200;
+    } else if (car.x >= canvasWidth + 200){
+        car.x = -200;
     }
 }
 
 /**Check if player collides with a car */
 function checkCollision(cars) {
-    if (playerX + playerSize >= cars.x && 
-        playerX <= cars.x +cars.width &&
+    if (
+        playerX + playerSize >= cars.x &&
+        playerX <= cars.x + cars.width &&
         playerY + playerSize >= cars.y &&
-        playerY <= cars.y + cars.height) {
+        playerY <= cars.y + cars.height
+    ) {
         hit = true;
     }
 }
@@ -91,24 +109,26 @@ document.addEventListener("keyup", (event) => {
 });
 
 /** Create a car object */
-function createCar(x, y, width, height, speed, colour) {
+function createCar(x, y, width, height, speed, colour, direction) {
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.speed = speed;
     this.colour = colour;
-    this.direction = 1;
+    this.direction = direction;
 }
 
-const car1 = new createCar(50, 100, 80, 40, 2, "red");
+const car1 = new createCar(canvasWidth, 100, 60, 40, 4, "red", -1);
 carsList.push(car1);
-const car2 = new createCar(150, 200, 60, 40, 3, "yellow");
+const car2 = new createCar(0, 200, 80, 40, 2.5, "yellow", 1);
 carsList.push(car2);
-const car3 = new createCar(150, 300, 80, 40, 2.5, "green");
+const car3 = new createCar(0, 300, 80, 40, 3, "green", 1);
 carsList.push(car3);
+const car4 = new createCar(canvasWidth, 400, 100, 40, 2, "purple", -1);
+carsList.push(car4);
 
-// Start game loops
-drawPlayer();
+// Start game loop
 carsList.forEach((car) => drawCars(car));
+drawPlayer();
 updatePositions(carsList);
