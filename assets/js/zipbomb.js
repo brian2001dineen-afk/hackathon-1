@@ -14,22 +14,71 @@ class Boundary {
     }
 
     draw() {
-        c.fillStyle = "blue";
+        c.fillStyle = "cyan";
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }
-const map = [
-    ["-", "-", "-", "-", "-", "-"],
-    ["-", " ", " ", " ", " ", "-"],
-    ["-", " ", " ", " ", " ", "-"],
-    ["-", "-", "-", "-", "-", "-"],
-];
-const bound = [];
 
+class Player {
+    constructor({ position, velocity }) {
+        this.position = position;
+        this.velocity = velocity;
+        this.radius = 5;
+        this.color = "red";
+    }
+
+    draw() {
+        c.beginPath();
+        c.arc(
+            this.position.x,
+            this.position.y,
+            this.radius,
+            Math.PI * 2,
+            false
+        );
+        c.fillStyle = this.color;
+        c.fill();
+    }
+
+    update() {
+        this.draw();
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+    }
+}
+
+// Implementation variables
+const bound = [];
+const player = new Player({
+    position: {
+        x: Boundary.width + Boundary.width / 2,
+        y: Boundary.height + Boundary.height / 2,
+    },
+    velocity: {
+        x: 0,
+        y: 0,
+    },
+});
+
+const map = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
+
+// translate map array and create map boundaries
 map.forEach((row, i) => {
     row.forEach((symbol, j) => {
         switch (symbol) {
-            case "-":
+            case 1:
                 bound.push(
                     new Boundary({
                         position: {
@@ -43,24 +92,44 @@ map.forEach((row, i) => {
     });
 });
 
-bound.forEach((boundary) => {
-    boundary.draw();
+function animate() {
+    requestAnimationFrame(animate);
+    c.clearRect(0, 0, canv.width, canv.height);
+    bound.forEach((boundary) => {
+        boundary.draw();
+
+        player.update();
+        // collision detection
+
+        if (
+            player.position.y - player.radius <=
+                boundary.position.y + boundary.height &&
+            player.position.x + player.radius >= boundary.position.x &&
+            player.position.y + player.radius >= boundary.position.y &&
+            player.position.x - player.radius <=
+                boundary.position.x + boundary.width
+        ) {
+            console.log("collide");
+        }
+    });
+}
+
+animate();
+
+// Keypress tracking for multi-inputs
+addEventListener("keydown", ({ key }) => {
+    switch (key) {
+        case "k":
+            player.position.y = player.position.y - Boundary.height;
+            break;
+        case "h":
+            player.position.x = player.position.x - Boundary.width;
+            break;
+        case "j":
+            player.position.y = player.position.y + Boundary.height;
+            break;
+        case "l":
+            player.position.x = player.position.x + Boundary.width;
+            break;
+    }
 });
-
-// class Player {
-//     constructor({ x, y, color }) {
-//         this.x = x;
-//         this.y = y;
-//         this.color = color;
-//     }
-
-//     draw() {
-//         c.beginPath();
-//         c.arc(this.x, this.y, 30, Math.PI * 2, false);
-//         c.fillStyle = this.color;
-//         c.fill();
-//     }
-// }
-
-// const player = new Player(100, 100, "blue");
-// player.draw();
