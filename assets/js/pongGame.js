@@ -15,6 +15,15 @@ function LeftPaddle(x, y, w, h) {
         context.fillRect(this.x, this.y, this.w, this.h);
     };
 
+    this.checkBounds = function () {
+        if (this.y < 0) {
+            this.y = 0;
+        }
+        if (this.y + this.h > canvas.height) {
+            this.y = canvas.height - this.h;
+        }
+    };
+
     this.updatePaddle = function () {
         this.drawLeftPaddle();
     };
@@ -82,11 +91,14 @@ function playerPaddleMove(e) {
         case 38: // up arrow on keyboard
             // paddle up
             lPaddle.y -= 60;
+            //makes sure paddle doesnt go off screen
+            lPaddle.checkBounds();
             break;
 
         case 40: // down arrow on keyboard
             // paddle down
             lPaddle.y += 60;
+            lPaddle.checkBounds();
             break;
     }
     console.log(e.keyCode);
