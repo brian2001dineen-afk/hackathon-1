@@ -201,6 +201,7 @@ const game = {
             this.deaths += 1;
             timer.stop();
             this.state.innerText = "Crashed! Press enter to restart.";
+            //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
         }
