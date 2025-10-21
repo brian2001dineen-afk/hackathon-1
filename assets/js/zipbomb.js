@@ -33,11 +33,13 @@ class Player {
     }
 
     center_x() {
-        return this.x + Boundary.width / 2;
+        // player is drawn at its center already
+        return this.position.x;
     }
 
     center_y() {
-        return this.y + Boundary.height / 2;
+        // player is drawn at its center already
+        return this.position.y;
     }
 
     draw() {
@@ -117,6 +119,10 @@ class Coin {
 let bound = [];
 let enemies = [];
 let coins = [];
+let currentLevel = 1; // active level index
+let playerSpawn = null; // spawn position for respawn
+let score = 0;
+let won = false;
 const player = new Player({
     position: {
         x: Boundary.width + Boundary.width / 2,
@@ -143,7 +149,7 @@ const map = [
     [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 1],
+        [1, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 1],
         [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
         [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
@@ -179,6 +185,14 @@ function coordTranslator(j, i, centering) {
 
 // translate map array and create map boundaries
 function renderLevel(lvl) {
+    // reset state for level
+    bound = [];
+    enemies = [];
+    coins = [];
+    playerSpawn = null;
+    won = false;
+    currentLevel = lvl;
+
     map[lvl].forEach((row, i) => {
         row.forEach((symbol, j) => {
             switch (symbol) {
@@ -191,8 +205,10 @@ function renderLevel(lvl) {
                     );
                     break;
                 case 2:
-                    // Place player
+                    // Place player and record spawn
                     player.position = coordTranslator(j, i, true);
+                    playerSpawn = { ...player.position };
+                    break;
                 case 3:
                     // Place enemies
                     enemies.push(
@@ -202,32 +218,82 @@ function renderLevel(lvl) {
                     );
                     break;
                 case 4:
+                    // Place coins
                     coins.push(
                         new Coin({
                             position: coordTranslator(j, i, true),
                         })
                     );
-                // place coins
+                    break;
+                case 5:
+                    // Victory zone tile; no object needed, handled via logic
+                    break;
             }
         });
     });
 }
 
-renderLevel(1);
+// For testing, render the first level
+renderLevel(currentLevel);
 
-function checkColliding(collider) {
-    let dx = player.center_x() - collider.center_x();
-    let dy = player.center_y() - collider.center_y();
+// Determine if a given map cell is a wall (1) or out of bounds
+function isWallAtCell(cellX, cellY) {
+    const level = map[currentLevel];
+    if (!Array.isArray(level) || cellY < 0 || cellY >= level.length)
+        return true;
+    const row = level[cellY];
+    if (!Array.isArray(row) || cellX < 0 || cellX >= row.length) return true;
+    return row[cellX] === 1;
+}
 
-    if (
-        player.position.y - player.radius <=
-            collider.position.y + boundary.height &&
-        player.position.x + player.radius >= boundary.position.x &&
-        player.position.y + player.radius >= boundary.position.y &&
-        player.position.x - player.radius <=
-            boundary.position.x + boundary.width
-    ) {
-        console.log("collide");
+// Check if a player at nextX,nextY (center) would overlap any wall tile
+function canMoveTo(nextX, nextY, radius = player.radius) {
+    // compute the AABB of the circle and sample overlapped tiles
+    const left = nextX - radius;
+    const right = nextX + radius;
+    const top = nextY - radius;
+    const bottom = nextY + radius;
+
+    const startCol = Math.floor(left / Boundary.width);
+    const endCol = Math.floor(right / Boundary.width);
+    const startRow = Math.floor(top / Boundary.height);
+    const endRow = Math.floor(bottom / Boundary.height);
+
+    for (let row = startRow; row <= endRow; row++) {
+        for (let col = startCol; col <= endCol; col++) {
+            if (isWallAtCell(col, row)) return false;
+        }
+    }
+    return true;
+}
+
+// Get tile value at world center coordinates
+function getTileAtCoord(x, y) {
+    const col = Math.floor(x / Boundary.width);
+    const row = Math.floor(y / Boundary.height);
+    const level = map[currentLevel];
+    if (!Array.isArray(level) || row < 0 || row >= level.length) return -1;
+    const r = level[row];
+    if (!Array.isArray(r) || col < 0 || col >= r.length) return -1;
+    return r[col];
+}
+
+function setTileAtCoord(x, y, value) {
+    const col = Math.floor(x / Boundary.width);
+    const row = Math.floor(y / Boundary.height);
+    const level = map[currentLevel];
+    if (!Array.isArray(level) || row < 0 || row >= level.length) return;
+    const r = level[row];
+    if (!Array.isArray(r) || col < 0 || col >= r.length) return;
+    r[col] = value;
+}
+
+function resetPlayerToSpawn() {
+    if (playerSpawn) {
+        player.position.x = playerSpawn.x;
+        player.position.y = playerSpawn.y;
+    } else {
+        console.log('Couldnt reset to spawn');
     }
 }
 
@@ -235,40 +301,122 @@ function animate() {
     c.clearRect(0, 0, canv.width, canv.height);
     bound.forEach((boundary) => {
         boundary.draw();
-        player.update();
-        // collision detection
     });
+    coins.forEach((coin) => coin.update());
     enemies.forEach((enemy) => {
         enemy.draw();
+        // Per-frame enemy collision safety
+        const dx = player.position.x - enemy.position.x;
+        const dy = player.position.y - enemy.position.y;
+        const distSq = dx * dx + dy * dy;
+        const minDist = player.radius + enemy.radius;
+        // Kill the player
+        if (distSq <= minDist * minDist) {
+            resetPlayerToSpawn();
+        }
     });
+
+    // Victory check (in case moved externally)
+    // if (!won && getTileAtCoord(player.position.x, player.position.y) === 5) {
+    //     won = true;
+    //     // simple overlay hint
+    //     c.save();
+    //     c.fillStyle = "rgba(0,0,0,0.35)";
+    //     c.fillRect(0, 0, canv.width, canv.height);
+    //     c.fillStyle = "white";
+    //     c.font = "24px Hack, monospace";
+    //     c.fillText("Victory! Press R to restart.", 20, 40);
+    //     c.restore();
+    // }
+    player.update();
     requestAnimationFrame(animate);
 }
-
-// helper to change the target framerate at runtime
-function settargetfps(fps) {
-    if (typeof fps !== "number" || fps <= 0) return;
-    targetfps = fps;
-    frameinterval = 1000 / targetfps;
-}
-
-function collision(obstacle, enemy) {}
 
 animate();
 
 // Keypress tracking for multi-inputs
 addEventListener("keydown", ({ key }) => {
+    if (won) {
+        if (key === "r" || key === "R") {
+            currentLevel++
+            renderLevel(currentLevel);
+        }
+        return;
+    }
+    // step size aligns with grid
+    const stepX = Boundary.width;
+    const stepY = Boundary.height;
+    let nextX = player.position.x;
+    let nextY = player.position.y;
+
     switch (key) {
-        case "k":
-            player.position.y = player.position.y - Boundary.height;
+        case "k": // up
+        case "ArrowUp":
+            nextY -= stepY;
             break;
-        case "h":
-            player.position.x = player.position.x - Boundary.width;
+        case "h": // left
+        case "ArrowLeft":
+            nextX -= stepX;
             break;
-        case "j":
-            player.position.y = player.position.y + Boundary.height;
+        case "j": // down
+        case "ArrowDown":
+            nextY += stepY;
             break;
-        case "l":
-            player.position.x = player.position.x + Boundary.width;
+        case "l": // right
+        case "ArrowRight":
+            nextX += stepX;
             break;
+        default:
+            return; // ignore other keys
+    }
+
+    // Only move if destination is not blocked by walls
+    if (canMoveTo(nextX, nextY)) {
+        player.position.x = nextX;
+        player.position.y = nextY;
+
+        // Collect coins at new position
+        for (let i = 0; i < coins.length; i++) {
+            const coin = coins[i];
+            const dx = player.position.x - coin.position.x;
+            const dy = player.position.y - coin.position.y;
+            const distSq = dx * dx + dy * dy;
+            const minDist = player.radius + coin.radius;
+            if (distSq <= minDist * minDist) {
+                score += 1;
+                coins.splice(i, 1);
+                i--;
+                setTileAtCoord(coin.position.x, coin.position.y, 0);
+            }
+        }
+
+        // Victory tile when stepped onto
+        if (getTileAtCoord(player.position.x, player.position.y) === 5) {
+            won = true;
+        }
+    }
+
+    // Check collision with enemies after move
+    for (const e of enemies) {
+        const dx = player.position.x - e.position.x;
+        const dy = player.position.y - e.position.y;
+        const distSq = dx * dx + dy * dy;
+        const minDist = player.radius + e.radius;
+        if (distSq <= minDist * minDist) {
+            // Simple reaction: reset to spawn (first spawn tile or current position fallback)
+            resetPlayerToSpawn();
+            break;
+        }
     }
 });
+
+// Locate player spawn from map (first tile marked 2)
+function findPlayerSpawn() {
+    const level = map[currentLevel];
+    for (let i = 0; i < level.length; i++) {
+        for (let j = 0; j < level[i].length; j++) {
+            if (level[i][j] === 2) return coordTranslator(j, i, true);
+        }
+    }
+    return null;
+}
