@@ -16,9 +16,10 @@ const game = {
         "black",
     ],
     carDirections: [1, -1],
+    carsList: [], // Array where the cars on screen are stored
     player: {
         size: 30,
-        step: 1,
+        step: 2,
         keys: {},
         colour: "blue",
         x: 0,
@@ -27,10 +28,10 @@ const game = {
         yStart: 0,
         hit: false,
     },
-    carsList: [], // Array where the cars on screen are stored
 
     /** Initialize the game */
     init() {
+        timer.start()
         this.carsList = []; // Reset carsList to empty
         this.c = this.canvas.getContext("2d");
         this.canvasWidth = this.canvas.width;
@@ -43,10 +44,11 @@ const game = {
         this.loop();
         document.addEventListener("keydown", (event) => {
             this.player.keys[event.key] = true;
-            // Listen for Enter key to restart after crash
+            // Listen for enter key to restart game after crash
             if (event.key === "Enter" && this.player.hit) {
                 this.player.hit = false;
                 this.state.innerText = "Running";
+                timer.reset()
                 game.init();
             }
         });
@@ -91,9 +93,9 @@ const game = {
         car.x += car.speed * car.direction;
         car.y += 0.5;
         if (car.x <= 0 - 200) {
-            car.x = this.canvasWidth + 200;
+            car.x = this.canvasWidth + this.getRandomNumber(160,200);
         } else if (car.x >= this.canvasWidth + 200) {
-            car.x = -200;
+            car.x = this.getRandomNumber(-160,-200);
         }
     },
 
@@ -175,6 +177,7 @@ const game = {
         // If player object gets hit by a car end the game
         if (this.player.hit) {
             this.deaths += 1;
+            timer.stop()
             this.state.innerText = "Crashed! Press enter to restart.";
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
