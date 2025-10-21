@@ -10,6 +10,7 @@ function LeftPaddle(x, y, w, h) {
     this.h = h;
 
     this.drawLeftPaddle = function () {
+        context.beginPath();
         context.fillStyle = "white";
         context.fillRect(this.x, this.y, this.w, this.h);
     };
@@ -72,6 +73,25 @@ let radius = 30;*/
 let gameBall = new Ball(200, 200, 3, 3, 30);
 let lPaddle = new LeftPaddle(0, 100, 20, 200);
 let rPaddle = new RightPaddle(canvas.width - 30, 100, 20, 200);
+
+// move player paddle with w and s keys
+window.addEventListener("keydown", playerPaddleMove, false);
+
+function playerPaddleMove(e) {
+    switch (e.keyCode) {
+        case 38: // up arrow on keyboard
+            // paddle up
+            lPaddle.y -= 60;
+            break;
+
+        case 40: // down arrow on keyboard
+            // paddle down
+            lPaddle.y += 60;
+            break;
+    }
+    console.log(e.keyCode);
+    console.log(lPaddle.y);
+}
 
 function animate() {
     requestAnimationFrame(animate);
