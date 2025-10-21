@@ -126,6 +126,31 @@ function computerPaddleMovement() {
     }
 }
 
+function collisionDetection(paddle) {
+    let textX;
+    let textY;
+    if (gameBall.x < paddle.x) {
+        textX = paddle.x;
+    } else if (gameBall.x > paddle.x + paddle.w) {
+        textX = paddle.x + paddle.w;
+    } else {
+        textX = gameBall.x;
+    }
+
+    if (gameBall.y < paddle.y) {
+        textY = paddle.y;
+    } else if (gameBall.y > paddle.y + paddle.h) {
+        textY = paddle.y + paddle.h;
+    } else {
+        textY = gameBall.y;
+    }
+
+    let distX = gameBall.x - textX;
+    let distY = gameBall.y - textY;
+    let distance = Math.sqrt(distX * distX + distY * distY);
+    return distance <= gameBall.radius;
+}
+
 function animate() {
     requestAnimationFrame(animate);
     context.beginPath();
@@ -149,6 +174,23 @@ function animate() {
     rPaddle.updatePaddle();
     gameBall.update();
     computerPaddleMovement();
+    /* if (collisionDetection(lPaddle) || collisionDetection(rPaddle)) {
+        gameBall.x = l
+        gameBall.dx = -gameBall.dx;
+        console.log("Collision detected!");
+    }*/
+    if (collisionDetection(lPaddle)) {
+        gameBall.x = lPaddle.x + lPaddle.w + gameBall.radius; // move ball outside paddle
+        gameBall.dx = -gameBall.dx; // reverse direction
+        console.log("Collision with left paddle!");
+    }
+
+    // Collision with right paddle
+    if (collisionDetection(rPaddle)) {
+        gameBall.x = rPaddle.x - gameBall.radius; // move ball outside paddle
+        gameBall.dx = -gameBall.dx; // reverse direction
+        console.log("Collision with right paddle!");
+    }
 }
 animate();
 
