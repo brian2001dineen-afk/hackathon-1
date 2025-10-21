@@ -5,6 +5,13 @@ const game = {
     c: null,
     canvasWidth: 0,
     canvasHeight: 0,
+    difficulty: [ //speeds of cars at various difficulties
+        [1, 4],
+        [2, 6],
+        [3, 8],
+    ],
+    difficultyIndex: 0,
+    playerSpeed: 0.5,
     carColours: [
         "red",
         "cyan",
@@ -19,7 +26,7 @@ const game = {
     carsList: [], // Array where the cars on screen are stored
     player: {
         size: 30,
-        step: 2,
+        step: 3,
         keys: {},
         colour: "blue",
         x: 0,
@@ -31,8 +38,9 @@ const game = {
 
     /** Initialize the game */
     init() {
-        timer.start()
+        timer.start();
         this.carsList = []; // Reset carsList to empty
+        this.playerSpeed = 0.5;
         this.c = this.canvas.getContext("2d");
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
@@ -42,13 +50,23 @@ const game = {
         this.player.y = this.player.yStart;
         this.carsList.push(this.createCar(0));
         this.loop();
+
+        // Increase playerSpeed by 0.1 every 2 seconds
+        if (this.speedInterval) clearInterval(this.speedInterval);
+        this.speedInterval = setInterval(() => {
+            if (this.playerSpeed < 4){ //speed cap
+                this.playerSpeed += 0.05; 
+            }    
+        }, 1000);
+
+        //listen for player inputs
         document.addEventListener("keydown", (event) => {
             this.player.keys[event.key] = true;
             // Listen for enter key to restart game after crash
             if (event.key === "Enter" && this.player.hit) {
                 this.player.hit = false;
                 this.state.innerText = "Running";
-                timer.reset()
+                timer.reset();
                 game.init();
             }
         });
@@ -91,11 +109,11 @@ const game = {
     /** Update cars position on the next frame*/
     updateCarPositions(car) {
         car.x += car.speed * car.direction;
-        car.y += 0.5;
+        car.y += this.playerSpeed;
         if (car.x <= 0 - 200) {
-            car.x = this.canvasWidth + this.getRandomNumber(160,200);
+            car.x = this.canvasWidth + this.getRandomNumber(160, 200);
         } else if (car.x >= this.canvasWidth + 200) {
-            car.x = this.getRandomNumber(-160,-200);
+            car.x = this.getRandomNumber(-160, -200);
         }
     },
 
@@ -136,7 +154,11 @@ const game = {
             y: y,
             width: this.getRandomNumber(60, 100), // Random car length
             height: 40,
-            speed: this.getRandomNumber(2, 8) / 2, // Random car speed
+            speed:
+                this.getRandomNumber(
+                    this.difficulty[this.difficultyIndex][0],
+                    this.difficulty[this.difficultyIndex][1]
+                ) / 2, // Random car speed based on difficulty
             colour: this.carColours[Math.floor(Math.random() * 8)],
             direction: this.carDirections[this.getRandomNumber(0, 1)], //Random car direction
         };
@@ -145,7 +167,7 @@ const game = {
     /** The loop that keeps the game running */
     loop() {
         this.c.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // Clear canvas once per frame for smoothness
-
+        document.getElementById("speedElement").innerText = this.playerSpeed.toFixed(2);
         // Player movement when arrows keys are pressed
         if (this.player.keys["ArrowUp"]) this.player.y -= this.player.step;
         if (this.player.keys["ArrowDown"]) this.player.y += this.player.step;
@@ -177,12 +199,12 @@ const game = {
         // If player object gets hit by a car end the game
         if (this.player.hit) {
             this.deaths += 1;
-            timer.stop()
+            timer.stop();
             this.state.innerText = "Crashed! Press enter to restart.";
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
         }
-    },
+    }
 };
 
 game.init(); // Start the game

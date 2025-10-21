@@ -1,23 +1,23 @@
 const timer = {
     time: 0,
-    intervalId: null,
+    interval: null,
     /** Start timer counter */
     start() {
         this.seconds = 0;
-        this.intervalId = setInterval(() => {
+        this.interval = setInterval(() => {
             this.time += 0.1; // 
-            document.getElementById("timer").innerText = this.time.toFixed(2);
+            document.getElementById("timerElement").innerText = this.time.toFixed(2);
         }, 100);
     },
     /** Pause timer counter */
     stop() {
-        clearInterval(this.intervalId);
+        clearInterval(this.interval);
     },
 
     /** Reset timer counter */
     reset() {
         this.stop();
         this.time = 0;
-        document.getElementById("timer").innerText = this.time.toFixed(2);
+        document.getElementById("timerElement").innerText = this.time.toFixed(2);
     }
 };
