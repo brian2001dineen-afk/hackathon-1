@@ -35,8 +35,18 @@ function RightPaddle(x, y, w, h) {
     this.w = w;
     this.h = h;
     this.drawRightPaddle = function () {
+        context.beginPath();
         context.fillStyle = "white";
         context.fillRect(this.x, this.y, this.w, this.h);
+    };
+
+    this.checkAIBounds = function () {
+        if (this.y < 0) {
+            this.y = 0;
+        }
+        if (this.y + this.h > canvas.height) {
+            this.y = canvas.height - this.h;
+        }
     };
 
     this.updatePaddle = function () {
@@ -101,8 +111,19 @@ function playerPaddleMove(e) {
             lPaddle.checkBounds();
             break;
     }
-    console.log(e.keyCode);
-    console.log(lPaddle.y);
+}
+
+// simple AI for computer paddle
+function computerPaddleMovement() {
+    if (gameBall.y < rPaddle.y) {
+        rPaddle.y -= 6;
+        rPaddle.checkAIBounds();
+    }
+
+    if (gameBall.y > rPaddle.y + rPaddle.h) {
+        rPaddle.y += 6;
+        rPaddle.checkAIBounds();
+    }
 }
 
 function animate() {
@@ -127,6 +148,7 @@ function animate() {
     lPaddle.updatePaddle();
     rPaddle.updatePaddle();
     gameBall.update();
+    computerPaddleMovement();
 }
 animate();
 
