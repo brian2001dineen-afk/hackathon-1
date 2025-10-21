@@ -1,11 +1,10 @@
 const game = {
     // Placeholder attributes incase the DOM hasn't finished loading
     canvas: document.querySelector("canvas"),
-    crashesCounter: document.getElementById("crashes"),
+    state: document.getElementById("state"),
     c: null,
     canvasWidth: 0,
     canvasHeight: 0,
-    deaths: 0,
     carColours: [
         "red",
         "cyan",
@@ -32,6 +31,7 @@ const game = {
 
     /** Initialize the game */
     init() {
+        this.carsList = []; // Reset carsList to empty
         this.c = this.canvas.getContext("2d");
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
@@ -43,6 +43,12 @@ const game = {
         this.loop();
         document.addEventListener("keydown", (event) => {
             this.player.keys[event.key] = true;
+            // Listen for Enter key to restart after crash
+            if (event.key === "Enter" && this.player.hit) {
+                this.player.hit = false;
+                this.state.innerText = "Running";
+                game.init();
+            }
         });
         document.addEventListener("keyup", (event) => {
             this.player.keys[event.key] = false;
@@ -126,11 +132,11 @@ const game = {
         return {
             x: Math.random() * this.canvasWidth,
             y: y,
-            width: this.getRandomNumber(60, 100),
+            width: this.getRandomNumber(60, 100), // Random car length
             height: 40,
-            speed: this.getRandomNumber(2, 8) / 2,
+            speed: this.getRandomNumber(2, 8) / 2, // Random car speed
             colour: this.carColours[Math.floor(Math.random() * 8)],
-            direction: this.carDirections[this.getRandomNumber(0, 1)],
+            direction: this.carDirections[this.getRandomNumber(0, 1)], //Random car direction
         };
     },
 
@@ -162,19 +168,17 @@ const game = {
         this.addNewCar();
         this.carsList.forEach((car) => this.checkCollision(car));
 
-        // If player object gets hit by a car
-        if (this.player.hit) {
-            this.deaths += 1;
-            this.crashesCounter.innerText = "Crashes: " + this.deaths;
-            this.player.x = this.player.xStart;
-            this.player.y = this.player.yStart;
-            this.player.hit = false;
-        }
-
         //Draw the assets with their updated position
         this.carsList.forEach((car) => this.drawCars(car));
         this.drawPlayer();
-        requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
+
+        // If player object gets hit by a car end the game
+        if (this.player.hit) {
+            this.deaths += 1;
+            this.state.innerText = "Crashed! Press enter to restart.";
+        } else {
+            requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
+        }
     },
 };
 
