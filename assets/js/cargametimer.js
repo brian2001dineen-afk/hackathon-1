@@ -5,8 +5,7 @@ const timer = {
     start() {
         this.seconds = 0;
         this.interval = setInterval(() => {
-            this.time += 0.1; // 
-            document.getElementById("timerElement").innerText = this.time.toFixed(2);
+            this.time += 0.1;
         }, 100);
     },
     /** Pause timer counter */
@@ -18,6 +17,5 @@ const timer = {
     reset() {
         this.stop();
         this.time = 0;
-        document.getElementById("timerElement").innerText = this.time.toFixed(2);
     }
 };

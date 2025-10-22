@@ -1,10 +1,9 @@
 const game = {
     // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
-    state: document.getElementById("state"),
     c: null,
-    canvasWidth: 0,
-    canvasHeight: 0,
+    canvasWidth: 600,
+    canvasHeight: 600,
     menu: true,
     difficulty: [
         //speeds of cars at various difficulties
@@ -13,7 +12,9 @@ const game = {
         [3, 8],
     ],
     difficultyIndex: 2, // Change difficulty level 0-2
-    roadScrollSpeed: 1, //Speed which the roads scroll downwards
+    roadScrollSpeed: 1, //Starting speed which the roads scroll downwards
+    roadIncrement: 0.1, //Scrolling speed increase per second
+    speedCap: 8, // Max scroll speed
     carColours: [
         "red",
         "cyan",
@@ -27,8 +28,8 @@ const game = {
     carDirections: [1, -1],
     carsList: [], // Array where the cars on screen are stored
     player: {
-        size: 40,
-        step: 3,
+        size: 40, //Player size
+        step: 3, //Player speed
         keys: {},
         colour: "blue",
         x: 0,
@@ -37,13 +38,44 @@ const game = {
         yStart: 0,
         hit: false,
     },
-
+    //Main menu screen
     menu() {
+        this.c = this.canvas.getContext("2d");
+        this.canvasWidth = this.canvas.width;
+        this.canvasHeight = this.canvas.height;
+
+        this.c.fillStyle = "black";
+        this.c.font = "70px Arial";
+        const menuTitle = "Car Crosser";
+        const textWidth = this.c.measureText(menuTitle).width;
+        this.c.fillText(
+            menuTitle,
+            (this.canvasWidth - textWidth) / 2,
+            this.canvasHeight / 2
+        );
+        this.c.font = "30px Arial";
+        const menuInstructions1 = "Use W,A,S,D to move your car";
+        const textWidth2 = this.c.measureText(menuInstructions1).width;
+        this.c.fillText(
+            menuInstructions1,
+            (this.canvasWidth - textWidth2) / 2,
+            this.canvasHeight / 2 + 70
+        );
+        const menuInstructions2 = "Press enter to start";
+        const textWidth3 = this.c.measureText(menuInstructions2).width;
+        this.c.fillText(
+            menuInstructions2,
+            (this.canvasWidth - textWidth3) / 2,
+            this.canvasHeight / 2 + 140
+        );
+
+
         document.addEventListener("keypress", (event) => {
             if (event.key === "Enter" && this.menu) {
                 this.init();
             }
         });
+        this.menu();
     },
 
     /** Initialize the game change attributes here for testing*/
@@ -65,9 +97,9 @@ const game = {
         // Increase roadScrollSpeed by 0.1 every 2 seconds
         if (this.speedInterval) clearInterval(this.speedInterval);
         this.speedInterval = setInterval(() => {
-            if (this.roadScrollSpeed < 8) {
+            if (this.roadScrollSpeed < this.speedCap) {
                 //speed cap
-                this.roadScrollSpeed += 0.1;
+                this.roadScrollSpeed += this.roadIncrement;
             }
         }, 1000);
 
@@ -77,7 +109,6 @@ const game = {
             // Listen for enter key to restart game after crash
             if (event.key === "r" && this.player.hit) {
                 this.player.hit = false;
-                this.state.innerText = "Game running";
                 timer.reset();
                 game.init();
             }
@@ -85,6 +116,32 @@ const game = {
         document.addEventListener("keyup", (event) => {
             this.player.keys[event.key] = false;
         });
+    },
+
+    /** Draw players time*/
+    drawTime(){
+        this.c.fillStyle = "black";
+        this.c.font = "20px Arial";
+        const speed = "Time: " + timer.time.toFixed(2);
+        const textWidth = this.c.measureText(speed).width;
+        this.c.fillText(
+            speed,
+            this.canvasWidth - textWidth - 10,
+            this.canvasHeight -5
+        );
+    },
+
+    /** Draw players speed*/
+    drawSpeed(){
+        this.c.fillStyle = "black";
+        this.c.font = "20px Arial";
+        const speed = "Speed: " + this.roadScrollSpeed.toFixed(2) + "/" + this.speedCap.toFixed(2);
+        const textWidth = this.c.measureText(speed).width;
+        this.c.fillText(
+            speed,
+            10,
+            this.canvasHeight -5
+        );
     },
 
     /** Draw the player controlled object */
@@ -126,7 +183,7 @@ const game = {
         );
 
         //Draw the car on the road
-        const direction = car.direction == 1 ? [2, 5, 5, 2] : [5, 2, 2, 5];
+        const direction = car.direction == -1 ? [5, 2, 2, 5] : [2, 5, 5, 2];
 
         this.c.strokeStyle = car.colour;
         this.c.fillStyle = car.colour;
@@ -224,8 +281,6 @@ const game = {
     /** The loop that keeps the game running */
     loop() {
         this.c.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // Clear canvas once per frame for smoothness
-        document.getElementById("speedElement").innerText =
-            this.roadScrollSpeed.toFixed(2);
         // Player movement when arrows keys are pressed
         if (this.player.keys["w"]) {
             this.player.y -= this.player.step;
@@ -247,7 +302,7 @@ const game = {
         );
         this.player.y = Math.min(
             Math.max(this.player.y, 0),
-            this.canvasHeight - this.player.size
+            this.canvasHeight - this.player.size * 1.5
         );
 
         // Update cars position and if new cars needs to be added or old ones off screen deleted
@@ -261,14 +316,14 @@ const game = {
         //Draw the assets with their updated position
         this.carsList.forEach((car) => this.drawCars(car));
         this.drawPlayer();
-
+        this.drawSpeed();
+        this.drawTime();
         // If player object gets hit by a car end the game
         if (this.player.hit) {
-            this.deaths += 1;
-            timer.stop();
-            this.state.innerText = "Crashed! Press enter to restart.";
+
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
 
+            timer.stop();
             this.c.fillStyle = "rgba(203, 91, 91, 0.7)";
             this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
@@ -282,12 +337,20 @@ const game = {
                 this.canvasHeight / 2
             );
             this.c.font = "30px Arial";
-            const gameOverMessage2 = "Press r to restart";
+            const gameOverMessage2 = "You drove for: " + timer.time.toFixed(2) + " seconds";
             const textWidth2 = this.c.measureText(gameOverMessage2).width;
             this.c.fillText(
                 gameOverMessage2,
                 (this.canvasWidth - textWidth2) / 2,
                 this.canvasHeight / 2 + 70
+            );
+            this.c.font = "30px Arial";
+            const gameOverMessage3 = "Press r to restart";
+            const textWidth3 = this.c.measureText(gameOverMessage3).width;
+            this.c.fillText(
+                gameOverMessage3,
+                (this.canvasWidth - textWidth3) / 2,
+                this.canvasHeight / 2 + 150
             );
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
