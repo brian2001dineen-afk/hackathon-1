@@ -1,12 +1,19 @@
+body {
+    background-color: black;
+    color:white;
+}
+
+
 .canvasContainer {
     display:flex;
     justify-content: center;
 }
 
-canvas {
-    
+canvas {  
     image-rendering: pixelated;
     background-color: lightgreen;
     outline: black 2px solid;
+    color:black;
 }
+
 

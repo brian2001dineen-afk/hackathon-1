@@ -5,13 +5,14 @@ const game = {
     c: null,
     canvasWidth: 0,
     canvasHeight: 0,
-    difficulty: [ //speeds of cars at various difficulties
+    difficulty: [
+        //speeds of cars at various difficulties
         [1, 4],
         [2, 6],
         [3, 8],
     ],
-    difficultyIndex: 0, // Change difficulty level 0-2
-    playerSpeed: 0.5,
+    difficultyIndex: 2, // Change difficulty level 0-2
+    roadScrollSpeed: 1, //Speed which the roads scroll downwards
     carColours: [
         "red",
         "cyan",
@@ -40,7 +41,7 @@ const game = {
     init() {
         timer.start();
         this.carsList = []; // Reset carsList to empty
-        this.playerSpeed = 0.5;
+        this.roadScrollSpeed = 1;
         this.c = this.canvas.getContext("2d");
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
@@ -51,12 +52,13 @@ const game = {
         this.carsList.push(this.createCar(0));
         this.loop();
 
-        // Increase playerSpeed by 0.1 every 2 seconds
+        // Increase roadScrollSpeed by 0.1 every 2 seconds
         if (this.speedInterval) clearInterval(this.speedInterval);
         this.speedInterval = setInterval(() => {
-            if (this.playerSpeed < 8){ //speed cap
-                this.playerSpeed += 0.1; 
-            }    
+            if (this.roadScrollSpeed < 8) {
+                //speed cap
+                this.roadScrollSpeed += 0.1;
+            }
         }, 1000);
 
         //listen for player inputs
@@ -104,23 +106,32 @@ const game = {
             car.width,
             car.height
         );
-        if (car.colour === "black"){
+        if (car.colour === "black") {
             this.c.fillStyle = "#022532";
         } else {
             this.c.fillStyle = "black";
         }
         if (car.direction === -1) {
-           this.c.fillRect(Math.round(car.x) + 5,Math.round(car.y) + 5,car.width / 4,car.height - 10) 
+            this.c.fillRect(
+                Math.round(car.x) + 5,
+                Math.round(car.y) + 5,
+                car.width / 4,
+                car.height - 10
+            );
         } else {
-            this.c.fillRect(Math.round(car.x) + car.width * 0.75 -5,Math.round(car.y) + 5,car.width / 4,car.height - 10) 
+            this.c.fillRect(
+                Math.round(car.x) + car.width * 0.75 - 5,
+                Math.round(car.y) + 5,
+                car.width / 4,
+                car.height - 10
+            );
         }
-        
     },
 
     /** Update cars position on the next frame*/
     updateCarPositions(car) {
         car.x += car.speed * car.direction;
-        car.y += this.playerSpeed;
+        car.y += this.roadScrollSpeed;
         if (car.x <= 0 - 200) {
             car.x = this.canvasWidth + this.getRandomNumber(160, 200);
         } else if (car.x >= this.canvasWidth + 200) {
@@ -178,7 +189,8 @@ const game = {
     /** The loop that keeps the game running */
     loop() {
         this.c.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // Clear canvas once per frame for smoothness
-        document.getElementById("speedElement").innerText = this.playerSpeed.toFixed(2);
+        document.getElementById("speedElement").innerText =
+            this.roadScrollSpeed.toFixed(2);
         // Player movement when arrows keys are pressed
         if (this.player.keys["w"]) this.player.y -= this.player.step;
         if (this.player.keys["s"]) this.player.y += this.player.step;
@@ -212,11 +224,24 @@ const game = {
             this.deaths += 1;
             timer.stop();
             this.state.innerText = "Crashed! Press enter to restart.";
-            requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
+            //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
+
+            this.c.fillStyle = "rgba(202, 65, 65, 0.7)";
+            this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+            this.c.fillStyle = "black";
+            this.c.font = "70px Arial";
+            const gameOverMessage = "OH NO!";
+            const textWidth = this.c.measureText(gameOverMessage).width;
+            this.c.fillText(
+                gameOverMessage,
+                (this.canvasWidth - textWidth) / 2,
+                this.canvasHeight / 2
+            );
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
         }
-    }
+    },
 };
 
 game.init(); // Start the game
