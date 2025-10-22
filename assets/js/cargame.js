@@ -1,10 +1,11 @@
 const game = {
-    // Placeholder attributes incase the DOM hasn't finished loading
+    // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
     state: document.getElementById("state"),
     c: null,
     canvasWidth: 0,
     canvasHeight: 0,
+    menu: true,
     difficulty: [
         //speeds of cars at various difficulties
         [1, 4],
@@ -37,9 +38,17 @@ const game = {
         hit: false,
     },
 
-    /** Initialize the game */
+    menu() {
+        document.addEventListener("keypress", (event) => {
+            if (event.key === "Enter" && this.menu) {
+                this.init();
+            }
+        });
+    },
+
+    /** Initialize the game change attributes here for testing*/
     init() {
-        timer.start();
+        this.menu = false;
         this.carsList = []; // Reset carsList to empty
         this.roadScrollSpeed = 1;
         this.c = this.canvas.getContext("2d");
@@ -50,6 +59,7 @@ const game = {
         this.player.x = this.player.xStart;
         this.player.y = this.player.yStart;
         this.carsList.push(this.createCar(0));
+        timer.start();
         this.loop();
 
         // Increase roadScrollSpeed by 0.1 every 2 seconds
@@ -65,9 +75,9 @@ const game = {
         document.addEventListener("keydown", (event) => {
             this.player.keys[event.key] = true;
             // Listen for enter key to restart game after crash
-            if (event.key === "Enter" && this.player.hit) {
+            if (event.key === "r" && this.player.hit) {
                 this.player.hit = false;
-                this.state.innerText = "Running";
+                this.state.innerText = "Game running";
                 timer.reset();
                 game.init();
             }
@@ -86,7 +96,8 @@ const game = {
             Math.round(this.player.x),
             Math.round(this.player.y),
             this.player.size,
-            this.player.size * 1.5, [5,5,2,2]
+            this.player.size * 1.5,
+            [5, 5, 2, 2]
         );
         this.c.fill();
 
@@ -94,13 +105,13 @@ const game = {
         this.c.fillStyle = "black";
         this.c.beginPath();
         this.c.roundRect(
-                Math.round(this.player.x) + 5,
-                Math.round(this.player.y) + 5,
-                this.player.size -10,
-                this.player.size / 3, [10,10,4,4]
-            );
+            Math.round(this.player.x) + 5,
+            Math.round(this.player.y) + 5,
+            this.player.size - 10,
+            this.player.size / 3,
+            [10, 10, 4, 4]
+        );
         this.c.fill();
-
     },
 
     /** Draw the car objects and roads */
@@ -114,9 +125,8 @@ const game = {
             car.height * 2
         );
 
-
         //Draw the car on the road
-        const direction = car.direction == 1 ? [2,5,5,2] : [5,2,2,5];
+        const direction = car.direction == 1 ? [2, 5, 5, 2] : [5, 2, 2, 5];
 
         this.c.strokeStyle = car.colour;
         this.c.fillStyle = car.colour;
@@ -125,7 +135,8 @@ const game = {
             Math.round(car.x),
             Math.round(car.y),
             car.width,
-            car.height,direction
+            car.height,
+            direction
         );
         this.c.fill();
 
@@ -137,14 +148,16 @@ const game = {
                 Math.round(car.x) + 5,
                 Math.round(car.y) + 5,
                 car.width / 4,
-                car.height - 10, [10,4,4,10]
+                car.height - 10,
+                [10, 4, 4, 10]
             );
         } else {
             this.c.roundRect(
                 Math.round(car.x) + car.width * 0.75 - 5,
                 Math.round(car.y) + 5,
                 car.width / 4,
-                car.height - 10, [4,10,10,4]
+                car.height - 10,
+                [4, 10, 10, 4]
             );
         }
         this.c.fill();
@@ -214,10 +227,18 @@ const game = {
         document.getElementById("speedElement").innerText =
             this.roadScrollSpeed.toFixed(2);
         // Player movement when arrows keys are pressed
-        if (this.player.keys["w"]) this.player.y -= this.player.step;
-        if (this.player.keys["s"]) this.player.y += this.player.step;
-        if (this.player.keys["a"]) this.player.x -= this.player.step;
-        if (this.player.keys["d"]) this.player.x += this.player.step;
+        if (this.player.keys["w"]) {
+            this.player.y -= this.player.step;
+        }
+        if (this.player.keys["s"]) {
+            this.player.y += this.player.step;
+        }
+        if (this.player.keys["a"]) {
+            this.player.x -= this.player.step;
+        }
+        if (this.player.keys["d"]) {
+            this.player.x += this.player.step;
+        }
 
         // Clamp position to stay within canvas when step isnt divisible by the canvas dimentions
         this.player.x = Math.min(
@@ -261,12 +282,12 @@ const game = {
                 this.canvasHeight / 2
             );
             this.c.font = "30px Arial";
-            const gameOverMessage2 = "Press enter to restart";
+            const gameOverMessage2 = "Press r to restart";
             const textWidth2 = this.c.measureText(gameOverMessage2).width;
             this.c.fillText(
                 gameOverMessage2,
                 (this.canvasWidth - textWidth2) / 2,
-                (this.canvasHeight / 2) + 70
+                this.canvasHeight / 2 + 70
             );
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
@@ -274,4 +295,4 @@ const game = {
     },
 };
 
-game.init(); // Start the game
+game.menu(); // Start the game
