@@ -2,6 +2,9 @@ let canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let context = canvas.getContext("2d");
+let playerScore = 0;
+let computerScore = 0;
+const MAX_SCORE = 3;
 
 function LeftPaddle(x, y, w, h) {
     this.x = x;
@@ -89,9 +92,9 @@ let dx = (Math.random() - 0.5) * 18;
 let dy = (Math.random() - 0.5) * 18;
 let radius = 30;*/
 
-let gameBall = new Ball(200, 200, 3, 3, 30);
-let lPaddle = new LeftPaddle(0, 100, 20, 200);
-let rPaddle = new RightPaddle(canvas.width - 30, 100, 20, 200);
+let gameBall = new Ball(200, 200, 3, 3, 10);
+let lPaddle = new LeftPaddle(0, 100, 20, 150);
+let rPaddle = new RightPaddle(canvas.width - 30, 100, 20, 150);
 
 // move player paddle with w and s keys
 window.addEventListener("keydown", playerPaddleMove, false);
@@ -125,36 +128,56 @@ function computerPaddleMovement() {
         rPaddle.checkAIBounds();
     }
 }
-
+// collision detection between ball and paddles
 function collisionDetection(paddle) {
-    let textX;
-    let textY;
+    let nearestPointX;
+    let nearestPointY;
     if (gameBall.x < paddle.x) {
-        textX = paddle.x;
+        nearestPointX = paddle.x;
     } else if (gameBall.x > paddle.x + paddle.w) {
-        textX = paddle.x + paddle.w;
+        nearestPointX = paddle.x + paddle.w;
     } else {
-        textX = gameBall.x;
+        nearestPointX = gameBall.x;
     }
 
     if (gameBall.y < paddle.y) {
-        textY = paddle.y;
+        nearestPointY = paddle.y;
     } else if (gameBall.y > paddle.y + paddle.h) {
-        textY = paddle.y + paddle.h;
+        nearestPointY = paddle.y + paddle.h;
     } else {
-        textY = gameBall.y;
+        nearestPointY = gameBall.y;
     }
 
-    let distX = gameBall.x - textX;
-    let distY = gameBall.y - textY;
+    let distX = gameBall.x - nearestPointX;
+    let distY = gameBall.y - nearestPointY;
     let distance = Math.sqrt(distX * distX + distY * distY);
     return distance <= gameBall.radius;
 }
+
+function updateScores() {}
+
+function resetGame() {}
+
+function checkWhoWon() {}
 
 function animate() {
     requestAnimationFrame(animate);
     context.beginPath();
     context.clearRect(0, 0, innerWidth, innerHeight);
+
+    context.font = "30px Arial";
+    context.fillStyle = "white";
+    context.fillText("Player Score:", 520, 50);
+
+    context.fillStyle = "white";
+    context.fillText("0", 705, 50);
+
+    context.fillStyle = "white";
+    context.fillText("Computer Score:", 800, 50);
+
+    context.fillStyle = "white";
+    context.fillText("0", 1030, 50);
+
     // Draw center line
     context.rect(canvas.width / 2 - 4, 0, 8, canvas.height);
     context.fillStyle = "white";
@@ -174,11 +197,7 @@ function animate() {
     rPaddle.updatePaddle();
     gameBall.update();
     computerPaddleMovement();
-    /* if (collisionDetection(lPaddle) || collisionDetection(rPaddle)) {
-        gameBall.x = l
-        gameBall.dx = -gameBall.dx;
-        console.log("Collision detected!");
-    }*/
+
     if (collisionDetection(lPaddle)) {
         gameBall.x = lPaddle.x + lPaddle.w + gameBall.radius; // move ball outside paddle
         gameBall.dx = -gameBall.dx; // reverse direction
