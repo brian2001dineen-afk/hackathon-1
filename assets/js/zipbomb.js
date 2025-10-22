@@ -4,11 +4,6 @@ const c = canv.getContext("2d");
 canv.width = window.innerWidth;
 canv.height = window.innerHeight;
 
-// Framerate lock (default 60 FPS). Change with setTargetFPS(fps).
-var targetFPS = 60,
-    frameInterval = 1000 / targetFPS,
-    lastFrameTime = 0;
-
 class Boundary {
     static width = 30;
     static height = 30;
