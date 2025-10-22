@@ -26,7 +26,7 @@ const game = {
     carDirections: [1, -1],
     carsList: [], // Array where the cars on screen are stored
     player: {
-        size: 30,
+        size: 40,
         step: 3,
         keys: {},
         colour: "blue",
@@ -84,8 +84,18 @@ const game = {
             Math.round(this.player.x),
             Math.round(this.player.y),
             this.player.size,
-            this.player.size
+            this.player.size * 1.5
         );
+
+        this.c.fillStyle = "black";
+        this.c.fillRect(
+                Math.round(this.player.x) + 5,
+                Math.round(this.player.y) + 5,
+                this.player.size -10,
+                this.player.size / 3
+            );
+
+
     },
 
     /** Draw the car objects and roads */
@@ -98,6 +108,8 @@ const game = {
             this.canvasWidth,
             car.height * 2
         );
+
+
         //Draw the car on the road
         this.c.fillStyle = car.colour;
         this.c.fillRect(
@@ -144,7 +156,7 @@ const game = {
         if (
             this.player.x + this.player.size >= car.x &&
             this.player.x <= car.x + car.width &&
-            this.player.y + this.player.size >= car.y &&
+            this.player.y + this.player.size * 1.5 >= car.y &&
             this.player.y <= car.y + car.height
         ) {
             this.player.hit = true;
