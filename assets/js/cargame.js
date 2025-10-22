@@ -10,7 +10,7 @@ const game = {
         [2, 6],
         [3, 8],
     ],
-    difficultyIndex: 0,
+    difficultyIndex: 2,
     playerSpeed: 0.5,
     carColours: [
         "red",
@@ -54,8 +54,8 @@ const game = {
         // Increase playerSpeed by 0.1 every 2 seconds
         if (this.speedInterval) clearInterval(this.speedInterval);
         this.speedInterval = setInterval(() => {
-            if (this.playerSpeed < 4){ //speed cap
-                this.playerSpeed += 0.05; 
+            if (this.playerSpeed < 8){ //speed cap
+                this.playerSpeed += 0.1; 
             }    
         }, 1000);
 
@@ -104,6 +104,17 @@ const game = {
             car.width,
             car.height
         );
+        if (car.colour === "black"){
+            this.c.fillStyle = "#022532";
+        } else {
+            this.c.fillStyle = "black";
+        }
+        if (car.direction === -1) {
+           this.c.fillRect(Math.round(car.x) + 5,Math.round(car.y) + 5,car.width / 4,car.height - 10) 
+        } else {
+            this.c.fillRect(Math.round(car.x) + car.width * 0.75 -5,Math.round(car.y) + 5,car.width / 4,car.height - 10) 
+        }
+        
     },
 
     /** Update cars position on the next frame*/
@@ -169,10 +180,10 @@ const game = {
         this.c.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // Clear canvas once per frame for smoothness
         document.getElementById("speedElement").innerText = this.playerSpeed.toFixed(2);
         // Player movement when arrows keys are pressed
-        if (this.player.keys["ArrowUp"]) this.player.y -= this.player.step;
-        if (this.player.keys["ArrowDown"]) this.player.y += this.player.step;
-        if (this.player.keys["ArrowLeft"]) this.player.x -= this.player.step;
-        if (this.player.keys["ArrowRight"]) this.player.x += this.player.step;
+        if (this.player.keys["w"]) this.player.y -= this.player.step;
+        if (this.player.keys["s"]) this.player.y += this.player.step;
+        if (this.player.keys["a"]) this.player.x -= this.player.step;
+        if (this.player.keys["d"]) this.player.x += this.player.step;
 
         // Clamp position to stay within canvas when step isnt divisible by the canvas dimentions
         this.player.x = Math.min(
@@ -201,7 +212,7 @@ const game = {
             this.deaths += 1;
             timer.stop();
             this.state.innerText = "Crashed! Press enter to restart.";
-            //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
+            requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
         }
