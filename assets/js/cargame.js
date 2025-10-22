@@ -1,3 +1,5 @@
+const crashSound = new Audio("assets/sounds/cargameSounds/carCrash.mp3");
+const trafficSound = new Audio("assets/sounds/cargameSounds/traffic.mp3");
 const game = {
     // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
@@ -69,14 +71,15 @@ const game = {
             this.canvasHeight / 2 + 140
         );
 
-
         document.addEventListener("keypress", (event) => {
             if (event.key === "Enter" && this.menu) {
+                trafficSound.currentTime = 0;
+                trafficSound.play();
                 this.init();
             }
         });
-        this.menu();
     },
+
 
     /** Initialize the game change attributes here for testing*/
     init() {
@@ -97,7 +100,7 @@ const game = {
         // Increase roadScrollSpeed by 0.1 every 2 seconds
         if (this.speedInterval) clearInterval(this.speedInterval);
         this.speedInterval = setInterval(() => {
-            if (this.roadScrollSpeed < this.speedCap) {
+            if (this.roadScrollSpeed < this.speedCap - this.roadIncrement) {
                 //speed cap
                 this.roadScrollSpeed += this.roadIncrement;
             }
@@ -119,7 +122,7 @@ const game = {
     },
 
     /** Draw players time*/
-    drawTime(){
+    drawTime() {
         this.c.fillStyle = "black";
         this.c.font = "20px Arial";
         const speed = "Time: " + timer.time.toFixed(2);
@@ -127,21 +130,21 @@ const game = {
         this.c.fillText(
             speed,
             this.canvasWidth - textWidth - 10,
-            this.canvasHeight -5
+            this.canvasHeight - 5
         );
     },
 
     /** Draw players speed*/
-    drawSpeed(){
+    drawSpeed() {
         this.c.fillStyle = "black";
         this.c.font = "20px Arial";
-        const speed = "Speed: " + this.roadScrollSpeed.toFixed(2) + "/" + this.speedCap.toFixed(2);
+        const speed =
+            "Speed: " +
+            this.roadScrollSpeed.toFixed(2) +
+            "/" +
+            this.speedCap.toFixed(2);
         const textWidth = this.c.measureText(speed).width;
-        this.c.fillText(
-            speed,
-            10,
-            this.canvasHeight -5
-        );
+        this.c.fillText(speed, 10, this.canvasHeight - 5);
     },
 
     /** Draw the player controlled object */
@@ -197,6 +200,7 @@ const game = {
         );
         this.c.fill();
 
+        //Draw car windscreen
         this.c.strokeStyle = car.colour;
         this.c.fillStyle = car.colour == "black" ? "#022532" : "black";
         this.c.beginPath();
@@ -278,9 +282,10 @@ const game = {
         };
     },
 
-    /** The loop that keeps the game running */
+    /** Loop that keeps the game running */
     loop() {
         this.c.clearRect(0, 0, this.canvasWidth, this.canvasHeight); // Clear canvas once per frame for smoothness
+
         // Player movement when arrows keys are pressed
         if (this.player.keys["w"]) {
             this.player.y -= this.player.step;
@@ -320,8 +325,10 @@ const game = {
         this.drawTime();
         // If player object gets hit by a car end the game
         if (this.player.hit) {
-
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
+            
+            crashSound.currentTime = 0;
+            crashSound.play();
 
             timer.stop();
             this.c.fillStyle = "rgba(203, 91, 91, 0.7)";
@@ -337,7 +344,8 @@ const game = {
                 this.canvasHeight / 2
             );
             this.c.font = "30px Arial";
-            const gameOverMessage2 = "You drove for: " + timer.time.toFixed(2) + " seconds";
+            const gameOverMessage2 =
+                "You drove for: " + timer.time.toFixed(2) + " seconds";
             const textWidth2 = this.c.measureText(gameOverMessage2).width;
             this.c.fillText(
                 gameOverMessage2,
