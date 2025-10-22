@@ -3,8 +3,8 @@ const game = {
     // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
     c: null,
-    canvasWidth: 600,
-    canvasHeight: 600,
+    canvasWidth: 0,
+    canvasHeight: 0,
     menu: true,
     difficulty: [
         //speeds of cars at various difficulties
@@ -52,7 +52,7 @@ const game = {
         this.c.fillText(
             menuTitle,
             (this.canvasWidth - textWidth) / 2,
-            this.canvasHeight / 2
+            this.canvasHeight / 2 -50
         );
         this.c.font = "30px Arial";
         const menuInstructions1 = "Use W,A,S,D to move your car";
@@ -60,14 +60,14 @@ const game = {
         this.c.fillText(
             menuInstructions1,
             (this.canvasWidth - textWidth2) / 2,
-            this.canvasHeight / 2 + 70
+            this.canvasHeight / 2 + 20
         );
         const menuInstructions2 = "Press enter to start";
         const textWidth3 = this.c.measureText(menuInstructions2).width;
         this.c.fillText(
             menuInstructions2,
             (this.canvasWidth - textWidth3) / 2,
-            this.canvasHeight / 2 + 140
+            this.canvasHeight / 2 + 90
         );
 
         document.addEventListener("keypress", (event) => {
@@ -346,7 +346,7 @@ const game = {
                 this.c.fillText(
                     gameOverMessage,
                     (this.canvasWidth - textWidth) / 2,
-                    this.canvasHeight / 2
+                    this.canvasHeight / 2 -50
                 );
                 this.c.font = "30px Arial";
                 const gameOverMessage2 =
@@ -355,7 +355,7 @@ const game = {
                 this.c.fillText(
                     gameOverMessage2,
                     (this.canvasWidth - textWidth2) / 2,
-                    this.canvasHeight / 2 + 70
+                    this.canvasHeight / 2 + 20
                 );
                 this.c.font = "30px Arial";
                 const gameOverMessage3 = "Press r to restart";
@@ -363,7 +363,7 @@ const game = {
                 this.c.fillText(
                     gameOverMessage3,
                     (this.canvasWidth - textWidth3) / 2,
-                    this.canvasHeight / 2 + 150
+                    this.canvasHeight / 2 + 90
                 );
             };
             timer.stop();
