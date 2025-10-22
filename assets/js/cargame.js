@@ -1,5 +1,4 @@
-const crashSound = new Audio("assets/sounds/cargameSounds/carCrash.mp3");
-const trafficSound = new Audio("assets/sounds/cargameSounds/traffic.mp3");
+const crashSound = new Audio("assets/cargameAssets/carCrash.mp3");
 const game = {
     // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
@@ -73,13 +72,10 @@ const game = {
 
         document.addEventListener("keypress", (event) => {
             if (event.key === "Enter" && this.menu) {
-                trafficSound.currentTime = 0;
-                trafficSound.play();
                 this.init();
             }
         });
     },
-
 
     /** Initialize the game change attributes here for testing*/
     init() {
@@ -329,6 +325,13 @@ const game = {
             
             crashSound.currentTime = 0;
             crashSound.play();
+
+            const explosion = new Image();
+            explosion.src = "assets/cargameAssets/explosion.png";
+            explosion.onload = () => {
+                this.c.drawImage(explosion, game.player.x -20, game.player.y - 20, game.player.size *2, game.player.size*2);
+            }
+            this.c.fill
 
             timer.stop();
             this.c.fillStyle = "rgba(203, 91, 91, 0.7)";
