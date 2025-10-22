@@ -130,6 +130,7 @@ let coins = [];
 let currentLevel = 1; // active level index
 let playerSpawn = null; // spawn position for respawn
 let score = 0;
+let deaths = 0;
 let won = false;
 const player = new Player({
     position: {
@@ -193,6 +194,10 @@ function coordTranslator(j, i, centering) {
 
 // translate map array and create map boundaries
 function renderLevel(lvl) {
+    // For debug view
+    let debug_level = document.getElementById("level");
+    debug_level.innerText = `level: ${currentLevel}`;
+
     // reset state for level
     bound = [];
     viczone = [];
@@ -327,6 +332,8 @@ function resetPlayerToSpawn() {
  * Handles rendering for array-stored graphics
  */
 function renderSimpleObjects() {
+    let debug_deaths = document.getElementById("deaths");
+    debug_deaths.innerText = `deaths: ${deaths}`;
     bound.forEach((boundary) => boundary.draw());
     viczone.forEach((zone) => zone.draw());
     coins.forEach((coin) => coin.update());
@@ -340,6 +347,7 @@ function renderSimpleObjects() {
         // Kill the player
         if (distSq <= minDist * minDist) {
             resetPlayerToSpawn();
+            deaths = deaths + 1;
         }
     });
 }
@@ -350,17 +358,19 @@ function animate() {
     renderSimpleObjects();
 
     // Victory check (in case moved externally)
-    // if (!won && getTileAtCoord(player.position.x, player.position.y) === 5) {
-    //     won = true;
-    //     // simple overlay hint
-    //     c.save();
-    //     c.fillStyle = "rgba(0,0,0,0.35)";
-    //     c.fillRect(0, 0, canv.width, canv.height);
-    //     c.fillStyle = "white";
-    //     c.font = "24px Hack, monospace";
-    //     c.fillText("Victory! Press R to restart.", 20, 40);
-    //     c.restore();
-    // }
+    if (!won && getTileAtCoord(player.position.x, player.position.y) === 5) {
+        won = true;
+        // simple overlay hint
+        c.save();
+        c.fillStyle = "rgba(0,0,0,0.35)";
+        c.fillRect(0, 0, canv.width, canv.height);
+        c.fillStyle = "white";
+        c.font = "24px Hack, monospace";
+        c.fillText("Victory! Press R to restart.", 20, 40);
+        c.restore();
+    }
+    // TODO: implement time debug tracking
+    let debug_time = document.getElementById("time");
     player.update();
     requestAnimationFrame(animate);
 }
@@ -382,24 +392,35 @@ addEventListener("keydown", ({ key }) => {
     let nextX = player.position.x;
     let nextY = player.position.y;
 
+    // Debugging display
+    let debug_key = document.getElementById("key");
+    function getKey(key) {
+        debug_key.innerText = `last input: ${key}`;
+    }
+
     switch (key) {
         case "k": // up
         case "ArrowUp":
             nextY -= stepY;
+            getKey(key);
             break;
         case "h": // left
         case "ArrowLeft":
             nextX -= stepX;
+            getKey(key);
             break;
         case "j": // down
         case "ArrowDown":
             nextY += stepY;
+            getKey(key);
             break;
         case "l": // right
         case "ArrowRight":
             nextX += stepX;
+            getKey(key);
             break;
         default:
+            getKey(key);
             return; // ignore other keys
     }
 
@@ -409,6 +430,7 @@ addEventListener("keydown", ({ key }) => {
         player.position.y = nextY;
 
         // Collect coins at new position
+        let debug_score = document.getElementById("score");
         for (let i = 0; i < coins.length; i++) {
             const coin = coins[i];
             const dx = player.position.x - coin.position.x;
@@ -422,11 +444,14 @@ addEventListener("keydown", ({ key }) => {
                 setTileAtCoord(coin.position.x, coin.position.y, 0);
             }
         }
+        debug_score.innerText = `score: ${score}`;
 
         // Victory tile when stepped onto
+        let debug_won = document.getElementById("won");
         if (getTileAtCoord(player.position.x, player.position.y) === 5) {
             won = true;
         }
+        debug_won.innerText = `won: ${won}`;
     }
 });
 
@@ -440,3 +465,8 @@ function findPlayerSpawn() {
     }
     return null;
 }
+
+/**
+ * Debugger statistics displayer.
+ * Toggleable with thingy
+ */
