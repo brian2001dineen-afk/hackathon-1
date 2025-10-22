@@ -46,7 +46,7 @@ const game = {
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
         this.player.xStart = this.canvasWidth / 2 - this.player.size / 2;
-        this.player.yStart = this.canvasHeight - this.player.size - 20;
+        this.player.yStart = this.canvasHeight - this.player.size - 60;
         this.player.x = this.player.xStart;
         this.player.y = this.player.yStart;
         this.carsList.push(this.createCar(0));
@@ -79,22 +79,27 @@ const game = {
 
     /** Draw the player controlled object */
     drawPlayer() {
+        this.c.strokeStyle = this.player.colour;
         this.c.fillStyle = this.player.colour;
-        this.c.fillRect(
+        this.c.beginPath();
+        this.c.roundRect(
             Math.round(this.player.x),
             Math.round(this.player.y),
             this.player.size,
-            this.player.size * 1.5
+            this.player.size * 1.5, [5,5,2,2]
         );
+        this.c.fill();
 
+        this.c.strokeStyle = "black";
         this.c.fillStyle = "black";
-        this.c.fillRect(
+        this.c.beginPath();
+        this.c.roundRect(
                 Math.round(this.player.x) + 5,
                 Math.round(this.player.y) + 5,
                 this.player.size -10,
-                this.player.size / 3
+                this.player.size / 3, [10,10,4,4]
             );
-
+        this.c.fill();
 
     },
 
@@ -111,33 +116,38 @@ const game = {
 
 
         //Draw the car on the road
+        const direction = car.direction == 1 ? [2,5,5,2] : [5,2,2,5];
+
+        this.c.strokeStyle = car.colour;
         this.c.fillStyle = car.colour;
-        this.c.fillRect(
+        this.c.beginPath();
+        this.c.roundRect(
             Math.round(car.x),
             Math.round(car.y),
             car.width,
-            car.height
+            car.height,direction
         );
-        if (car.colour === "black") {
-            this.c.fillStyle = "#022532";
-        } else {
-            this.c.fillStyle = "black";
-        }
+        this.c.fill();
+
+        this.c.strokeStyle = car.colour;
+        this.c.fillStyle = car.colour == "black" ? "#022532" : "black";
+        this.c.beginPath();
         if (car.direction === -1) {
-            this.c.fillRect(
+            this.c.roundRect(
                 Math.round(car.x) + 5,
                 Math.round(car.y) + 5,
                 car.width / 4,
-                car.height - 10
+                car.height - 10, [10,4,4,10]
             );
         } else {
-            this.c.fillRect(
+            this.c.roundRect(
                 Math.round(car.x) + car.width * 0.75 - 5,
                 Math.round(car.y) + 5,
                 car.width / 4,
-                car.height - 10
+                car.height - 10, [4,10,10,4]
             );
         }
+        this.c.fill();
     },
 
     /** Update cars position on the next frame*/
