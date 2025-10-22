@@ -10,7 +10,7 @@ const game = {
         [2, 6],
         [3, 8],
     ],
-    difficultyIndex: 2,
+    difficultyIndex: 0, // Change difficulty level 0-2
     playerSpeed: 0.5,
     carColours: [
         "red",
