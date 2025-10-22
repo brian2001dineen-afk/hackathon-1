@@ -9,8 +9,8 @@ const game = {
     difficulty: [
         //speeds of cars at various difficulties
         [1, 4],
-        [2, 6],
         [3, 8],
+        [5, 12],
     ],
     difficultyIndex: 2, // Change difficulty level 0-2
     roadScrollSpeed: 1, //Starting speed which the roads scroll downwards
@@ -322,47 +322,51 @@ const game = {
         // If player object gets hit by a car end the game
         if (this.player.hit) {
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
-            
+
             crashSound.currentTime = 0;
             crashSound.play();
 
             const explosion = new Image();
             explosion.src = "assets/cargameAssets/explosion.png";
             explosion.onload = () => {
-                this.c.drawImage(explosion, game.player.x -20, game.player.y - 20, game.player.size *2, game.player.size*2);
-            }
-            this.c.fill
+                this.c.drawImage(
+                    explosion,
+                    game.player.x - 20,
+                    game.player.y - 20,
+                    game.player.size * 2,
+                    game.player.size * 2
+                );
+                this.c.fillStyle = "rgba(203, 91, 91, 0.7)";
+                this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
+                this.c.fillStyle = "red";
+                this.c.font = "70px Arial";
+                const gameOverMessage = "OH NO!";
+                const textWidth = this.c.measureText(gameOverMessage).width;
+                this.c.fillText(
+                    gameOverMessage,
+                    (this.canvasWidth - textWidth) / 2,
+                    this.canvasHeight / 2
+                );
+                this.c.font = "30px Arial";
+                const gameOverMessage2 =
+                    "You drove for: " + timer.time.toFixed(2) + " seconds";
+                const textWidth2 = this.c.measureText(gameOverMessage2).width;
+                this.c.fillText(
+                    gameOverMessage2,
+                    (this.canvasWidth - textWidth2) / 2,
+                    this.canvasHeight / 2 + 70
+                );
+                this.c.font = "30px Arial";
+                const gameOverMessage3 = "Press r to restart";
+                const textWidth3 = this.c.measureText(gameOverMessage3).width;
+                this.c.fillText(
+                    gameOverMessage3,
+                    (this.canvasWidth - textWidth3) / 2,
+                    this.canvasHeight / 2 + 150
+                );
+            };
             timer.stop();
-            this.c.fillStyle = "rgba(203, 91, 91, 0.7)";
-            this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-
-            this.c.fillStyle = "red";
-            this.c.font = "70px Arial";
-            const gameOverMessage = "OH NO!";
-            const textWidth = this.c.measureText(gameOverMessage).width;
-            this.c.fillText(
-                gameOverMessage,
-                (this.canvasWidth - textWidth) / 2,
-                this.canvasHeight / 2
-            );
-            this.c.font = "30px Arial";
-            const gameOverMessage2 =
-                "You drove for: " + timer.time.toFixed(2) + " seconds";
-            const textWidth2 = this.c.measureText(gameOverMessage2).width;
-            this.c.fillText(
-                gameOverMessage2,
-                (this.canvasWidth - textWidth2) / 2,
-                this.canvasHeight / 2 + 70
-            );
-            this.c.font = "30px Arial";
-            const gameOverMessage3 = "Press r to restart";
-            const textWidth3 = this.c.measureText(gameOverMessage3).width;
-            this.c.fillText(
-                gameOverMessage3,
-                (this.canvasWidth - textWidth3) / 2,
-                this.canvasHeight / 2 + 150
-            );
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
         }
