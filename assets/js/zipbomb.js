@@ -294,6 +294,10 @@ function setTileAtCoord(x, y, value) {
     r[col] = value;
 }
 
+/**
+ * Reset to spawn on DEATH from an enemy.
+ * TODO: death feedback/animation.
+ */
 function resetPlayerToSpawn() {
     if (playerSpawn) {
         player.position.x = playerSpawn.x;
@@ -399,19 +403,6 @@ addEventListener("keydown", ({ key }) => {
         // Victory tile when stepped onto
         if (getTileAtCoord(player.position.x, player.position.y) === 5) {
             won = true;
-        }
-    }
-
-    // Check collision with enemies after move
-    for (const e of enemies) {
-        const dx = player.position.x - e.position.x;
-        const dy = player.position.y - e.position.y;
-        const distSq = dx * dx + dy * dy;
-        const minDist = player.radius + e.radius;
-        if (distSq <= minDist * minDist) {
-            // Simple reaction: reset to spawn (first spawn tile or current position fallback)
-            resetPlayerToSpawn();
-            break;
         }
     }
 });
