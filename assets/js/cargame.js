@@ -226,10 +226,10 @@ const game = {
             this.state.innerText = "Crashed! Press enter to restart.";
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
 
-            this.c.fillStyle = "rgba(202, 65, 65, 0.7)";
+            this.c.fillStyle = "rgba(203, 91, 91, 0.7)";
             this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-            this.c.fillStyle = "black";
+            this.c.fillStyle = "red";
             this.c.font = "70px Arial";
             const gameOverMessage = "OH NO!";
             const textWidth = this.c.measureText(gameOverMessage).width;
@@ -237,6 +237,14 @@ const game = {
                 gameOverMessage,
                 (this.canvasWidth - textWidth) / 2,
                 this.canvasHeight / 2
+            );
+            this.c.font = "30px Arial";
+            const gameOverMessage2 = "Press enter to restart";
+            const textWidth2 = this.c.measureText(gameOverMessage2).width;
+            this.c.fillText(
+                gameOverMessage2,
+                (this.canvasWidth - textWidth2) / 2,
+                (this.canvasHeight / 2) + 70
             );
         } else {
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
