@@ -1,9 +1,6 @@
 const canv = document.querySelector("canvas");
 const c = canv.getContext("2d");
 
-canv.width = window.innerWidth;
-canv.height = window.innerHeight;
-
 class Boundary {
     static width = 30;
     static height = 30;
@@ -15,6 +12,21 @@ class Boundary {
 
     draw() {
         c.fillStyle = "cyan";
+        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+}
+
+canv.width = Boundary.width * 16;
+canv.height = Boundary.height * 16;
+
+class VictoryZone {
+    constructor({ position }) {
+        this.position = position;
+        this.width = Boundary.width;
+        this.height = Boundary.height;
+    }
+    draw() {
+        c.fillStyle = "green";
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }
@@ -112,6 +124,7 @@ class Coin {
 
 // Implementation variables
 let bound = [];
+let viczone = [];
 let enemies = [];
 let coins = [];
 let currentLevel = 1; // active level index
@@ -144,19 +157,19 @@ const map = [
     [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 2, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 1],
-        [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 1],
+        [1, 0, 3, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
         [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        // [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ],
 ];
@@ -182,8 +195,10 @@ function coordTranslator(j, i, centering) {
 function renderLevel(lvl) {
     // reset state for level
     bound = [];
+    viczone = [];
     enemies = [];
     coins = [];
+    score = 0;
     playerSpawn = null;
     won = false;
     currentLevel = lvl;
@@ -221,7 +236,12 @@ function renderLevel(lvl) {
                     );
                     break;
                 case 5:
-                    // Victory zone tile; no object needed, handled via logic
+                    // Place victory zone
+                    viczone.push(
+                        new VictoryZone({
+                            position: coordTranslator(j, i),
+                        })
+                    );
                     break;
             }
         });
@@ -279,6 +299,7 @@ function getTileAtCoord(x, y) {
     return r[col];
 }
 
+// Set array to a value given the coords
 function setTileAtCoord(x, y, value) {
     const col = Math.floor(x / Boundary.width);
     const row = Math.floor(y / Boundary.height);
@@ -302,11 +323,12 @@ function resetPlayerToSpawn() {
     }
 }
 
-function animate() {
-    c.clearRect(0, 0, canv.width, canv.height);
-    bound.forEach((boundary) => {
-        boundary.draw();
-    });
+/**
+ * Handles rendering for array-stored graphics
+ */
+function renderSimpleObjects() {
+    bound.forEach((boundary) => boundary.draw());
+    viczone.forEach((zone) => zone.draw());
     coins.forEach((coin) => coin.update());
     enemies.forEach((enemy) => {
         enemy.draw();
@@ -320,6 +342,12 @@ function animate() {
             resetPlayerToSpawn();
         }
     });
+}
+
+function animate() {
+    // Clear the canvas
+    c.clearRect(0, 0, canv.width, canv.height);
+    renderSimpleObjects();
 
     // Victory check (in case moved externally)
     // if (!won && getTileAtCoord(player.position.x, player.position.y) === 5) {
