@@ -148,7 +148,7 @@ const map = [
     // Level 1
     [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+        [1, 2, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
         [1, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 1],
         [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
@@ -231,6 +231,12 @@ function renderLevel(lvl) {
             }
         });
     });
+    if (playerSpawn === null) {
+        console.log(
+            "No playerSpawn found in level. Did you forget to place one?"
+        );
+        throw new Error("No playerSpawn detected. Aborting.");
+    }
 }
 
 // For testing, render the first level
@@ -293,7 +299,7 @@ function resetPlayerToSpawn() {
         player.position.x = playerSpawn.x;
         player.position.y = playerSpawn.y;
     } else {
-        console.log('Couldnt reset to spawn');
+        console.log("Couldnt reset to spawn");
     }
 }
 
@@ -338,7 +344,7 @@ animate();
 addEventListener("keydown", ({ key }) => {
     if (won) {
         if (key === "r" || key === "R") {
-            currentLevel++
+            currentLevel++;
             renderLevel(currentLevel);
         }
         return;
