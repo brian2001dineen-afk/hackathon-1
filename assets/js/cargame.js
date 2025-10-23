@@ -1,20 +1,24 @@
 const crashSound = new Audio("assets/cargameAssets/carCrash.mp3");
+const trafficSound = new Audio("assets/cargameAssets/traffic.mp3");
+const grassImg = new Image();
+grassImg.src = "assets/cargameAssets/grass.png";
 const game = {
     // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
     c: null,
     canvasWidth: 0,
     canvasHeight: 0,
+    backgroundY: 0,
     menu: true,
     difficulty: [
         //speeds of cars at various difficulties
-        [1, 4],
-        [3, 8],
-        [5, 12],
+        [2, 4],
+        [4, 8],
+        [6, 12],
     ],
     difficultyIndex: 2, // Change difficulty level 0-2
     roadScrollSpeed: 1, //Starting speed which the roads scroll downwards
-    roadIncrement: 0.1, //Scrolling speed increase per second
+    roadIncrement: 0.2, //Scrolling speed increase per second
     speedCap: 8, // Max scroll speed
     carColours: [
         "red",
@@ -30,7 +34,7 @@ const game = {
     carsList: [], // Array where the cars on screen are stored
     player: {
         size: 40, //Player size
-        step: 3, //Player speed
+        step: 4, //Player speed
         keys: {},
         colour: "blue",
         x: 0,
@@ -52,7 +56,7 @@ const game = {
         this.c.fillText(
             menuTitle,
             (this.canvasWidth - textWidth) / 2,
-            this.canvasHeight / 2 -50
+            this.canvasHeight / 2 - 50
         );
         this.c.font = "30px Arial";
         const menuInstructions1 = "Use W,A,S,D to move your car";
@@ -72,6 +76,9 @@ const game = {
 
         document.addEventListener("keypress", (event) => {
             if (event.key === "Enter" && this.menu) {
+                trafficSound.currentTime = 0;
+                trafficSound.volume = 0.5;
+                trafficSound.play();
                 this.init();
             }
         });
@@ -108,6 +115,8 @@ const game = {
             // Listen for enter key to restart game after crash
             if (event.key === "r" && this.player.hit) {
                 this.player.hit = false;
+                trafficSound.currentTime = 0;
+                trafficSound.play();
                 timer.reset();
                 game.init();
             }
@@ -115,6 +124,36 @@ const game = {
         document.addEventListener("keyup", (event) => {
             this.player.keys[event.key] = false;
         });
+    },
+
+    drawGrass() {
+        // Scroll the background in sync with the road
+        this.backgroundY += this.roadScrollSpeed;
+        if (this.backgroundY >= grassImg.height) {
+            this.backgroundY = 0;
+        }
+
+        // Draw the grass background
+        if (grassImg.complete) {
+            // Tile the image until the canvas is filled
+            for (
+                let y = this.backgroundY - grassImg.height;
+                y < this.canvasHeight;
+                y += grassImg.height
+            ) {
+                this.c.drawImage(
+                    grassImg,
+                    0,
+                    y,
+                    this.canvasWidth,
+                    grassImg.height
+                );
+            }
+        } else {
+            // Colour if image not loaded
+            this.c.fillStyle = "lightgreen";
+            this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+        }
     },
 
     /** Draw players time*/
@@ -305,7 +344,7 @@ const game = {
             Math.max(this.player.y, 0),
             this.canvasHeight - this.player.size * 1.5
         );
-
+        this.drawGrass();
         // Update cars position and if new cars needs to be added or old ones off screen deleted
         this.carsList.forEach((car) => this.updateCarPositions(car));
         this.carsList = this.carsList.filter(
@@ -316,16 +355,22 @@ const game = {
 
         //Draw the assets with their updated position
         this.carsList.forEach((car) => this.drawCars(car));
+
         this.drawPlayer();
         this.drawSpeed();
         this.drawTime();
+
         // If player object gets hit by a car end the game
         if (this.player.hit) {
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
 
+            //Play crash sound and pause the traffic sound
             crashSound.currentTime = 0;
+            crashSound.volume = 0.3;
             crashSound.play();
+            trafficSound.pause();
 
+            //Place explosion image on player and show game over screen
             const explosion = new Image();
             explosion.src = "assets/cargameAssets/explosion.png";
             explosion.onload = () => {
@@ -346,7 +391,7 @@ const game = {
                 this.c.fillText(
                     gameOverMessage,
                     (this.canvasWidth - textWidth) / 2,
-                    this.canvasHeight / 2 -50
+                    this.canvasHeight / 2 - 50
                 );
                 this.c.font = "30px Arial";
                 const gameOverMessage2 =
@@ -368,6 +413,7 @@ const game = {
             };
             timer.stop();
         } else {
+            //If not hit run game as normal
             requestAnimationFrame(() => this.loop()); // Run the loop on every animation frame so everything looks more smooth
         }
     },
