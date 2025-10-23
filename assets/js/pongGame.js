@@ -212,6 +212,44 @@ function main_kevin() {
             isGameStarted = false;
         }
     }
+    function drawLink() {
+        const panelWidth = 160;
+        const panelHeight = 40;
+        const padding = 10;
+        const panelX = canvas.width - panelWidth - padding; // top-right corner
+        const panelY = padding;
+
+        // Draw panel background
+        context.fillStyle = "rgba(0, 0, 0, 0.7)"; // semi-transparent black
+        context.fillRect(panelX, panelY, panelWidth, panelHeight);
+
+        // Draw the link text
+        context.fillStyle = "blue";
+        context.font = "18px Arial";
+        context.fillText("Go to Example", panelX + 10, panelY + 25);
+
+        // Update link coordinates for click detection
+        linkX = panelX + 10;
+        linkY = panelY + 5;
+        linkWidth = panelWidth - 20;
+        linkHeight = panelHeight - 10;
+    }
+
+    // Detect clicks
+    canvas.addEventListener("click", function (e) {
+        let rect = canvas.getBoundingClientRect();
+        let mouseX = e.clientX - rect.left;
+        let mouseY = e.clientY - rect.top;
+
+        if (
+            mouseX >= linkX &&
+            mouseX <= linkX + linkWidth &&
+            mouseY >= linkY &&
+            mouseY <= linkY + linkHeight
+        ) {
+            window.open(url, "_blank"); // Open the link
+        }
+    });
 
     function animate() {
         requestAnimationFrame(animate);
@@ -276,6 +314,7 @@ function main_kevin() {
             console.log("Collision with right paddle!");
         }
     }
+    drawLink();
     animate();
 
     //Resize if screen size changes, so right paddle doesn't go off screen
