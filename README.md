@@ -33,7 +33,7 @@ Once these elements were in place, focus was shifted towards graphics and audio 
 
 For my game design, I just decided to stick with the classic game of pong, black background, two white paddles, white boundary lines and white center white line.
 
-![Wireframe1](assets/images/hacketonpicsvers6.png)
+![Wireframe1](assets/images/hacketonpicsver6.png)
 I first got a ball bouncing on screen, I followed some tutorials and read documentation for canvas on to draw the ball and make it move, when I was happy with that I added the black background and made the ball red to make it stand out.
 
 ![Wireframe2](assets/images/hacketonpicvers1.png)
