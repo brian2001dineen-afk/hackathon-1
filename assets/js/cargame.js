@@ -157,21 +157,22 @@ const game = {
         }
     },
 
-    /** Draw players time*/
-    drawTime() {
+    /** Draw players speed and time*/
+    drawStats() {
+        //Draw stat background
+        this.c.fillStyle = "rgba(255,255,255,0.5)";
+        this.c.fillRect(0,this.canvasHeight - 25,this.canvasWidth,25);
+        
+        //Draw stats text
         this.c.fillStyle = "black";
         this.c.font = "20px Bungee";
-        const speed = "Time: " + timer.time.toFixed(2);
-        const textWidth = this.c.measureText(speed).width;
+        const time = "Time: " + timer.time.toFixed(2);
+        const textWidth1 = this.c.measureText(time).width;
         this.c.fillText(
-            speed,
-            this.canvasWidth - textWidth - 10,
+            time,
+            this.canvasWidth - textWidth1 - 10,
             this.canvasHeight - 5
         );
-    },
-
-    /** Draw players speed*/
-    drawSpeed() {
         this.c.fillStyle = "black";
         this.c.font = "20px Bungee";
         const speed =
@@ -179,9 +180,11 @@ const game = {
             this.roadScrollSpeed.toFixed(2) +
             "/" +
             this.speedCap.toFixed(2);
-        const textWidth = this.c.measureText(speed).width;
+        const textWidth2 = this.c.measureText(speed).width;
         this.c.fillText(speed, 10, this.canvasHeight - 5);
+        
     },
+
 
     /** Draw the player controlled object */
     drawPlayer() {
@@ -356,7 +359,7 @@ const game = {
             Math.max(this.player.y, 0),
             this.canvasHeight - this.player.size * 1.5
         );
-        this.drawGrass();
+        this.drawGrass(); // Draw the scrolling grass background
         // Update cars position and if new cars needs to be added or old ones off screen deleted
         this.carsList.forEach((car) => this.updateCarPositions(car));
         this.carsList = this.carsList.filter(
@@ -369,9 +372,8 @@ const game = {
         this.carsList.forEach((car) => this.drawCars(car));
 
         this.drawPlayer();
-        this.drawSpeed();
-        this.drawTime();
-
+        
+        this.drawStats();
         // If player object gets hit by a car end the game
         if (this.player.hit) {
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
