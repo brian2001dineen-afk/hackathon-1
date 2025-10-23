@@ -30,6 +30,17 @@ Most of the time was spent on the foundational elements, including
 
 Once these elements were in place, focus was shifted towards graphics and audio implementation.
 
+
+Early development of Car Crosser:
+
+Initially the game was designed to be like the game frogger, but over time the game turned into a game where you are a car driving while avoiding oncoming cars.
+
+Early development included:
+
+1. Creating a square the user could control with the keyboard.
+2. Creating other shapes that moved around the screen acting as obstacles.
+3. Create events when the player square collided with an obstacle shape.
+
 ## Features
 
 ### Arcade Homepage
@@ -74,7 +85,10 @@ Once these elements were in place, focus was shifted towards graphics and audio 
 
 ## Future Improvements
 
-…
+Car Crosser:
+1. Adding a difficultly setting to the main menu which would increase the oncoming cars speeds or make the cars themselves bigger.
+2. Adding a score leaderboard based on how long you drove before crashing.
+3. Have the car turn when the user drives left or right. (Would be challenging due to changes in collision)
 
 ## Technologies and References
 
