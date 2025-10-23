@@ -17,9 +17,6 @@ const game = {
         [6, 12],
     ],
     difficultyIndex: 2, // Change difficulty level 0-2
-    roadScrollSpeed: 1, //Starting speed which the roads scroll downwards
-    roadIncrement: 0.2, //Scrolling speed increase per second
-    speedCap: 8, // Max scroll speed
     carColours: [
         "red",
         "cyan",
@@ -89,7 +86,6 @@ const game = {
     init() {
         this.menu = false;
         this.carsList = []; // Reset carsList to empty
-        this.roadScrollSpeed = 1;
         this.c = this.canvas.getContext("2d");
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
@@ -101,14 +97,7 @@ const game = {
         timer.start();
         this.loop();
 
-        // Increase roadScrollSpeed by 0.1 every 2 seconds
-        if (this.speedInterval) clearInterval(this.speedInterval);
-        this.speedInterval = setInterval(() => {
-            if (this.roadScrollSpeed < this.speedCap - this.roadIncrement) {
-                //speed cap
-                this.roadScrollSpeed += this.roadIncrement;
-            }
-        }, 1000);
+
 
         //listen for player inputs
         document.addEventListener("keydown", (event) => {
@@ -129,7 +118,7 @@ const game = {
 
     drawGrass() {
         // Scroll the background in sync with the road
-        this.backgroundY += this.roadScrollSpeed;
+        this.backgroundY += timer.roadScrollSpeed;
         if (this.backgroundY >= grassImg.height) {
             this.backgroundY = 0;
         }
@@ -177,9 +166,9 @@ const game = {
         this.c.font = "20px Bungee";
         const speed =
             "Speed: " +
-            this.roadScrollSpeed.toFixed(2) +
+            timer.roadScrollSpeed.toFixed(2) +
             "/" +
-            this.speedCap.toFixed(2);
+            timer.speedCap.toFixed(2);
         const textWidth2 = this.c.measureText(speed).width;
         this.c.fillText(speed, 10, this.canvasHeight - 5);
         
@@ -277,7 +266,7 @@ const game = {
     /** Update cars position on the next frame*/
     updateCarPositions(car) {
         car.x += car.speed * car.direction;
-        car.y += this.roadScrollSpeed;
+        car.y += timer.roadScrollSpeed;
         if (car.x <= 0 - 200) {
             car.x = this.canvasWidth + this.getRandomNumber(160, 200);
         } else if (car.x >= this.canvasWidth + 200) {
