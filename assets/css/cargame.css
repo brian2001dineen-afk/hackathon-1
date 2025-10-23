@@ -1,0 +1,33 @@
+body {
+    background-color: #0b0c10;
+    color:white;
+}
+
+
+.canvasContainer {
+    display:flex;
+    justify-content: center;
+}
+
+canvas {  
+    image-rendering: pixelated;
+    background-color: green;
+    outline: black 2px solid;
+    color:black;
+}
+
+h1 {
+    text-align: center;
+    font-size:300%;
+}
+
+@media only screen and (max-width: 800px) {
+  canvas {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 200%;
+  }
+}
+
