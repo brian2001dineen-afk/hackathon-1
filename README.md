@@ -79,4 +79,8 @@ Once these elements were in place, focus was shifted towards graphics and audio 
 
 …
 
+## Deployment
+
+## Credits
+
 ---
