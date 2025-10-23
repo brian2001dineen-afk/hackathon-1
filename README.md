@@ -91,7 +91,7 @@ I spent the most time on the AI player, trying to improve it, by not making it t
 
 ## Future Improvements
 
-    Pong
+    I want to make the following future improvements for Pong:
     - Improve the AI and not have it so janky.
     - Add buttons to set number of games the player wants to play.
     - Add a reset button to reset game and start over.
@@ -99,8 +99,6 @@ I spent the most time on the AI player, trying to improve it, by not making it t
     - Make where the ball bounces more unpredictable and random.
     - Have the ability to drop in more balls.
     - Add sound effects when the ball bounces off walls or the player or AI score.
-
-…
 
 ## Technologies and References
 
