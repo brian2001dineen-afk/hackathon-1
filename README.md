@@ -84,21 +84,22 @@ I spent the most time on the AI player, trying to improve it, by not making it t
 
 ## Known Bugs
 
-    Pong
-    The main bug in pong is the AI is very janky and is to easy to play again, at one point it was unbeatable.
+Pong
+The main bug in pong is the AI is very janky and is to easy to play again, at one point it was unbeatable.
 
 …
 
 ## Future Improvements
 
-    I want to make the following future improvements for Pong:
-    - Improve the AI and not have it so janky.
-    - Add buttons to set number of games the player wants to play.
-    - Add a reset button to reset game and start over.
-    - Add buttons or a slider to make the game harder, increase ball speed etc.
-    - Make where the ball bounces more unpredictable and random.
-    - Have the ability to drop in more balls.
-    - Add sound effects when the ball bounces off walls or the player or AI score.
+I want to make the following future improvements for Pong:
+
+-   Improve the AI and not have it so janky.
+-   Add buttons to set number of games the player wants to play.
+-   Add a reset button to reset game and start over.
+-   Add buttons or a slider to make the game harder, increase ball speed etc.
+-   Make where the ball bounces more unpredictable and random.
+-   Have the ability to drop in more balls.
+-   Add sound effects when the ball bounces off walls or the player or AI score.
 
 ## Technologies and References
 
