@@ -105,6 +105,11 @@ I want to make the following future improvements for Pong:
 ## Technologies and References
 
 For this project we used the following technologies
+
+HTML 5 Canvas
+Javascript
+CSS
+
 …
 
 ## Deployment
