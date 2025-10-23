@@ -12,22 +12,22 @@
     // Define available games here to keep terminal and modal in sync
     const games = [
         {
-            key: "Brian",
+            key: "zipbomb",
             name: "Zipbomb",
             description: "A difficult movement game.",
-            url: "#snake",
+            url: "/zipbomb.html",
         },
         {
-            key: "Stephen",
-            name: "tbd1",
-            description: "TBD!",
-            url: "#tbd1",
+            key: "carcrosser",
+            name: "Car Crosser",
+            description: "Don't crash. The game gets harder over time.",
+            url: "/cargame.html",
         },
         {
-            key: "Kevin",
-            name: "tbd2",
-            description: "TBD!",
-            url: "#tbd2",
+            key: "pong",
+            name: "Pong",
+            description: "Classic pong.",
+            url: "/pong.html",
         },
     ];
 
@@ -117,7 +117,7 @@
             // For base implementation, we can navigate to anchors or future routes
             if (game.url && game.url !== "#") {
                 setTimeout(() => {
-                    window.location.hash = game.url;
+                    window.location.href = game.url;
                 }, 400);
             }
         },

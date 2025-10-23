@@ -17,6 +17,7 @@ This website serves as a base for 3 minigames made over the course of 3 days. Th
 We initially started with the terminal homepage as a connector for the site games. Then we each worked individually on our own pages, fleshing out our games in isolation.
 
 Early development of zipbomb:
+
 ![](https://i.imgur.com/5yDt1M7.png)[^1]
 
 [^1]: Prototype image: the player being the red ball; enemy = blue ball; coin = yellow ball.
@@ -43,6 +44,16 @@ I then drew the center line and added two rectangle paddles to the canvas
 I then drew two boundary lines on the canvas and that was it the design was done and it was time to implement game features. I also added player and computer score text which increment when either player or computer score and added a button which starts the game.
 
 I spent the most time on the AI player, trying to improve it, by not making it to hard or to easy.
+
+## Early development of Car Crosser:
+
+Initially the game was designed to be like the game frogger, but over time the game turned into a game where you are a car driving while avoiding oncoming cars.
+
+Early development included:
+
+1. Creating a square the user could control with the keyboard.
+2. Creating other shapes that moved around the screen acting as obstacles.
+3. Create events when the player square collided with an obstacle shape.
 
 ## Features
 
@@ -101,6 +112,11 @@ I want to make the following future improvements for Pong:
 -   Make where the ball bounces more unpredictable and random.
 -   Have the ability to drop in more balls.
 -   Add sound effects when the ball bounces off walls or the player or AI score.
+
+Car Crosser:
+1. Adding a difficultly setting to the main menu which would increase the oncoming cars speeds or make the cars themselves bigger.
+2. Adding a score leaderboard based on how long you drove before crashing.
+3. Have the car turn when the user drives left or right. (Would be challenging due to changes in collision)
 
 ## Technologies and References
 
