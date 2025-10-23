@@ -30,8 +30,22 @@ Most of the time was spent on the foundational elements, including
 
 Once these elements were in place, focus was shifted towards graphics and audio implementation.
 
+## Early Design Pong
 
-Early development of Car Crosser:
+For my game design, I just decided to stick with the classic game of pong, black background, two white paddles, white boundary lines and white center white line.
+
+![Wireframe1](assets/images/hacketonpicsver6.png)
+I first got a ball bouncing on screen, I followed some tutorials and read documentation for canvas on to draw the ball and make it move, when I was happy with that I added the black background and made the ball red to make it stand out.
+
+![Wireframe2](assets/images/hacketonpicvers1.png)
+I then drew the center line and added two rectangle paddles to the canvas
+
+![Wireframe3](assets/images/finishedproduct.png)
+I then drew two boundary lines on the canvas and that was it the design was done and it was time to implement game features. I also added player and computer score text which increment when either player or computer score and added a button which starts the game.
+
+I spent the most time on the AI player, trying to improve it, by not making it to hard or to easy.
+
+## Early development of Car Crosser:
 
 Initially the game was designed to be like the game frogger, but over time the game turned into a game where you are a car driving while avoiding oncoming cars.
 
@@ -81,9 +95,23 @@ Early development included:
 
 ## Known Bugs
 
+Pong
+
+The main bug in pong is the AI is very janky and is to easy to play against, at one point it was unbeatable.
+
 …
 
 ## Future Improvements
+
+I want to make the following future improvements for Pong:
+
+-   Improve the AI and not have it so janky.
+-   Add buttons to set number of games the player wants to play.
+-   Add a reset button to reset game and start over.
+-   Add buttons or a slider to make the game harder, increase ball speed etc.
+-   Make where the ball bounces more unpredictable and random.
+-   Have the ability to drop in more balls.
+-   Add sound effects when the ball bounces off walls or the player or AI score.
 
 Car Crosser:
 1. Adding a difficultly setting to the main menu which would increase the oncoming cars speeds or make the cars themselves bigger.
@@ -92,6 +120,16 @@ Car Crosser:
 
 ## Technologies and References
 
+For this project we used the following technologies
+
+HTML 5 Canvas
+Javascript
+CSS
+
 …
+
+## Deployment
+
+## Credits
 
 ---
