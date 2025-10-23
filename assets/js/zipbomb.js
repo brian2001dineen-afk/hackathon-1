@@ -1,6 +1,7 @@
 const canv = document.querySelector("canvas");
 const c = canv.getContext("2d");
 
+// Grid game object definitions
 class Boundary {
     static width = 30;
     static height = 30;
@@ -152,28 +153,6 @@ const player = new Player({
  * - 4: coin drop
  * - 5: victory zone
  */
-const map = [
-    [],
-    // Level 1
-    [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 2, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 1],
-        [1, 0, 3, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    ],
-];
 
 // Map 2D coordinate translation helpers
 function coordTranslator(j, i, centering) {
@@ -345,10 +324,10 @@ function renderSimpleObjects() {
         const distSq = dx * dx + dy * dy;
         const minDist = player.radius + enemy.radius;
         // Kill the player
-        if (distSq <= minDist * minDist) {
-            resetPlayerToSpawn();
-            deaths = deaths + 1;
-        }
+        // if (distSq <= minDist * minDist) {
+        //     resetPlayerToSpawn();
+        //     deaths = deaths + 1;
+        // }
     });
 }
 
