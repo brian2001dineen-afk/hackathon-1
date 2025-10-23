@@ -1,5 +1,5 @@
 // Main script wrapper
-function main() {
+function main_zipbomb() {
     const canv = document.querySelector("canvas");
     const c = canv.getContext("2d");
 
@@ -145,6 +145,7 @@ function main() {
     let score = 0;
     let deaths = 0;
     let won = false;
+    let map = loadMaps()
     const player = new Player({
         position: {
             x: Boundary.width + Boundary.width / 2,
@@ -462,4 +463,4 @@ function main() {
     }
 }
 
-main();
+main_zipbomb();
