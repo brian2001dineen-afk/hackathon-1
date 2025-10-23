@@ -212,13 +212,24 @@ const game = {
     /** Draw the car objects and roads */
     drawCars(car) {
         //Draw the road
-        this.c.fillStyle = "#828282";
+        this.c.fillStyle = "#5c5c5cff";
         this.c.fillRect(
             0,
             Math.round(car.y) - car.height / 2,
             this.canvasWidth,
             car.height * 2
         );
+        // Draw road dashed borders
+        this.c.setLineDash([40, 10]); // dashLength, gapLength
+        this.c.strokeStyle = "white";
+        this.c.lineWidth = 3;
+        this.c.strokeRect(
+            -10,
+            Math.round(car.y) - car.height / 2,
+            this.canvasWidth +20,
+            car.height * 2
+        );
+        this.c.setLineDash([]);
 
         //Draw the car on the road
         const direction = car.direction == -1 ? [5, 2, 2, 5] : [2, 5, 5, 2];
