@@ -86,7 +86,7 @@ I spent the most time on the AI player, trying to improve it, by not making it t
 
 Pong
 
-The main bug in pong is the AI is very janky and is to easy to play again, at one point it was unbeatable.
+The main bug in pong is the AI is very janky and is to easy to play against, at one point it was unbeatable.
 
 …
 
