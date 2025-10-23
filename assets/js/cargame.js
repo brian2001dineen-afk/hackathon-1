@@ -50,7 +50,7 @@ const game = {
         this.canvasHeight = this.canvas.height;
 
         this.c.fillStyle = "black";
-        this.c.font = "70px Arial";
+        this.c.font = "70px Bungee";
         const menuTitle = "Car Crosser";
         const textWidth = this.c.measureText(menuTitle).width;
         this.c.fillText(
@@ -58,7 +58,7 @@ const game = {
             (this.canvasWidth - textWidth) / 2,
             this.canvasHeight / 2 - 50
         );
-        this.c.font = "30px Arial";
+        this.c.font = "30px Bungee";
         const menuInstructions1 = "Use W,A,S,D to move your car";
         const textWidth2 = this.c.measureText(menuInstructions1).width;
         this.c.fillText(
@@ -66,6 +66,7 @@ const game = {
             (this.canvasWidth - textWidth2) / 2,
             this.canvasHeight / 2 + 20
         );
+        this.c.font = "30px Bungee";
         const menuInstructions2 = "Press enter to start";
         const textWidth3 = this.c.measureText(menuInstructions2).width;
         this.c.fillText(
@@ -159,7 +160,7 @@ const game = {
     /** Draw players time*/
     drawTime() {
         this.c.fillStyle = "black";
-        this.c.font = "20px Arial";
+        this.c.font = "20px Bungee";
         const speed = "Time: " + timer.time.toFixed(2);
         const textWidth = this.c.measureText(speed).width;
         this.c.fillText(
@@ -172,7 +173,7 @@ const game = {
     /** Draw players speed*/
     drawSpeed() {
         this.c.fillStyle = "black";
-        this.c.font = "20px Arial";
+        this.c.font = "20px Bungee";
         const speed =
             "Speed: " +
             this.roadScrollSpeed.toFixed(2) +
@@ -396,7 +397,7 @@ const game = {
                 this.c.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
                 this.c.fillStyle = "red";
-                this.c.font = "70px Arial";
+                this.c.font = "70px Bungee";
                 const gameOverMessage = "OH NO!";
                 const textWidth = this.c.measureText(gameOverMessage).width;
                 this.c.fillText(
@@ -404,7 +405,7 @@ const game = {
                     (this.canvasWidth - textWidth) / 2,
                     this.canvasHeight / 2 - 50
                 );
-                this.c.font = "30px Arial";
+                this.c.font = "30px Bungee";
                 const gameOverMessage2 =
                     "You drove for: " + timer.time.toFixed(2) + " seconds";
                 const textWidth2 = this.c.measureText(gameOverMessage2).width;
@@ -413,7 +414,7 @@ const game = {
                     (this.canvasWidth - textWidth2) / 2,
                     this.canvasHeight / 2 + 20
                 );
-                this.c.font = "30px Arial";
+                this.c.font = "30px Bungee";
                 const gameOverMessage3 = "Press r to restart";
                 const textWidth3 = this.c.measureText(gameOverMessage3).width;
                 this.c.fillText(
