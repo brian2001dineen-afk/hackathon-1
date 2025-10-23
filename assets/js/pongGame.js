@@ -205,15 +205,9 @@ function main_kevin() {
         rPaddle.checkAIBounds();
     }
 
-    function updateScores() {}
-
     function checkWhoWon() {
-        if (playerScore >= MAX_SCORE) {
-            // winnerMessage = "PLAYER WINS!";
+        if (playerScore >= MAX_SCORE || computerScore >= MAX_SCORE) {
             playerScore = 0;
-            isGameStarted = false;
-        } else if (computerScore >= MAX_SCORE) {
-            //winnerMessage = "COMPUTER WINS!";
             computerScore = 0;
             isGameStarted = false;
         }
