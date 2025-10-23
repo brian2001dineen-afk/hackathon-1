@@ -2,6 +2,8 @@ const crashSound = new Audio("assets/cargameAssets/carCrash.mp3");
 const trafficSound = new Audio("assets/cargameAssets/traffic.mp3");
 const grassImg = new Image();
 grassImg.src = "assets/cargameAssets/grass.png";
+const menuCar = new Image();
+menuCar.src = "assets/cargameAssets/menuCar.png";
 const game = {
     // Placeholder attributes incase the DOM hasn't finished loading change attributes in init for testing
     canvas: document.querySelector("canvas"),
@@ -45,7 +47,12 @@ const game = {
         this.c = this.canvas.getContext("2d");
         this.canvasWidth = this.canvas.width;
         this.canvasHeight = this.canvas.height;
+        
+        menuCar.onload = () => {
+            this.c.drawImage(menuCar, this.canvasWidth / 2 - 100, 100, 200, 100);
+        };
 
+        //Draw menu text
         this.c.fillStyle = "black";
         this.c.font = "70px Bungee";
         const menuTitle = "Car Crosser";
@@ -96,8 +103,6 @@ const game = {
         this.carsList.push(this.createCar(0));
         timer.start();
         this.loop();
-
-
 
         //listen for player inputs
         document.addEventListener("keydown", (event) => {
@@ -150,8 +155,8 @@ const game = {
     drawStats() {
         //Draw stat background
         this.c.fillStyle = "rgba(255,255,255,0.5)";
-        this.c.fillRect(0,this.canvasHeight - 25,this.canvasWidth,25);
-        
+        this.c.fillRect(0, this.canvasHeight - 25, this.canvasWidth, 25);
+
         //Draw stats text
         this.c.fillStyle = "black";
         this.c.font = "20px Bungee";
@@ -171,9 +176,7 @@ const game = {
             timer.speedCap.toFixed(2);
         const textWidth2 = this.c.measureText(speed).width;
         this.c.fillText(speed, 10, this.canvasHeight - 5);
-        
     },
-
 
     /** Draw the player controlled object */
     drawPlayer() {
@@ -219,7 +222,7 @@ const game = {
         this.c.strokeRect(
             -10,
             Math.round(car.y) - car.height / 2,
-            this.canvasWidth +20,
+            this.canvasWidth + 20,
             car.height * 2
         );
         this.c.setLineDash([]);
@@ -361,8 +364,8 @@ const game = {
         this.carsList.forEach((car) => this.drawCars(car));
 
         this.drawPlayer();
-        
         this.drawStats();
+
         // If player object gets hit by a car end the game
         if (this.player.hit) {
             //requestAnimationFrame(() => this.loop()); // God mode comment out to turn off
