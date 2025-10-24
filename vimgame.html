@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Vim Game</title>
+    <!-- Bootstrap (optional for layout/utilities) -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.8/css/bootstrap.min.css" />
+    <!-- Hack font -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css" />
+    <!-- Vim game CSS -->
+    <link rel="stylesheet" href="assets/css/vim.css" />
+</head>
+
+<body>
+    <main class="container-fluid py-3">
+        <div class="vim-screen mx-auto" aria-label="Vim-like game editor">
+            <div class="vim-topline d-flex justify-content-between">
+                <div class="filename">vimgame.txt</div>
+                <div class="encoding">utf-8</div>
+            </div>
+            <div class="vim-viewport">
+                <div class="vim-gutter" aria-hidden="true" id="vim-gutter"></div>
+                <pre class="vim-buffer" id="vim-buffer" role="textbox" aria-readonly="true" tabindex="0"></pre>
+            </div>
+            <div class="vim-statusline" id="vim-statusline">-- NORMAL -- 1,1 All</div>
+        </div>
+
+        <section class="mt-4">
+            <h2 class="h5">Map creator</h2>
+            <p class="text-secondary mb-2">Edit the map text below and click Load. Symbols: # wall, @ player, E enemy, $
+                coin, V victory, . or space floor.</p>
+            <textarea class="form-control font-monospace" rows="8" id="map-input"></textarea>
+            <div class="mt-2 d-flex gap-2">
+                <button class="btn btn-primary btn-sm" id="load-map-btn">Load Map</button>
+                <button class="btn btn-outline-secondary btn-sm" id="export-map-btn">Export Current</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/vim_game.js"></script>
+</body>
+
+</html>
