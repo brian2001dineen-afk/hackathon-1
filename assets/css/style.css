@@ -1,0 +1,158 @@
+:root {
+    --primary-font: "Hack", Courier, monospace;
+
+    /* Theme */
+    --bg: #0b0c10;
+    /* --bg: #888888; */
+    --bg-2: #111318;
+    --fg: #e5f4f1;
+    --muted: #8aa0a5;
+    --accent: #69a297; /* matches palette */
+    --accent-2: #50808e;
+    --danger: #f87171;
+    --ok: #34d399;
+
+    /* Palletes */
+
+    --col-1: #ddd8c4;
+    --col-2: #a3c9a8;
+    --col-3: #84b59f;
+    --col-4: #69a297;
+    --col-5: #50808e;
+}
+
+/* Global reset-ish */
+html,
+body {
+    height: 100%;
+    background: linear-gradient(180deg, var(--bg), var(--bg-2) 40%, var(--bg));
+    color: var(--fg);
+    font-family: var(--primary-font);
+}
+
+/* Terminal container */
+.terminal {
+    width: min(900px, 92vw);
+    background-color: var(--bg-2);
+    border: 1px solid #1c2128;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    overflow: hidden;
+}
+
+.terminal-header {
+    background: #151922;
+    border-bottom: 1px solid #222a35;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    user-select: none;
+}
+
+.terminal-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+.term-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.terminal-name {
+    color: var(--col-2);
+    text-shadow: 2px black;
+    font-size: 0.9rem;
+}
+
+.terminal-body {
+    min-height: 320px;
+    max-height: 52vh;
+    padding: 1rem 1rem 0.5rem 1rem;
+    overflow-y: auto;
+    font-size: 0.98rem;
+}
+
+.terminal-line {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+.terminal-line .prompt {
+    color: var(--accent);
+    white-space: nowrap;
+}
+.terminal-line .output {
+    color: var(--fg);
+}
+.terminal-line .error {
+    color: var(--danger);
+}
+.terminal-line .success {
+    color: var(--ok);
+}
+.terminal-line code {
+    color: inherit;
+}
+
+.terminal-input-line {
+    border-top: 1px solid #222a35;
+    background-color: #0f131a;
+    padding: 0.5rem 0.75rem;
+}
+.terminal-input-line .prompt {
+    color: var(--accent);
+}
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--fg);
+    outline: none;
+}
+.terminal-input::placeholder {
+    color: #5b6a70;
+}
+.terminal-input:focus {
+    box-shadow: none;
+}
+
+/* Scrollbar styling */
+.terminal-body::-webkit-scrollbar {
+    width: 10px;
+}
+.terminal-body::-webkit-scrollbar-thumb {
+    background: #2a3440;
+    border-radius: 10px;
+}
+.terminal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Button tweak */
+#openMenuBtn {
+    border-color: #3a4655;
+}
+#openMenuBtn:hover {
+    background: #1b2230;
+    border-color: #53647c;
+}
+
+/* Modal overrides */
+.modal-content {
+    border: 1px solid #2a3440;
+}
+.list-group-item {
+    background: transparent;
+    color: var(--fg);
+    border-color: #2a3440;
+}
+.list-group-item:hover {
+    background: #151b24;
+}
+
+/* Accessibility focus rings */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
