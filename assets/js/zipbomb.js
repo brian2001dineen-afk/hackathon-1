@@ -514,7 +514,10 @@
             if (e.key === "Enter") {
                 const cmd = state.cmdBuf.trim();
                 // Minimal command support
-                if (cmd === "q") {
+                if (cmd === "q!") {
+                    // Quit to lobby/index
+                    window.location.href = "index.html";
+                } else if (cmd === "q") {
                     // Restart current map from original text containing '@'
                     parseMapFromText(
                         state.originalText || mapInputEl?.value || ""
