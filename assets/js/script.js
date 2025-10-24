@@ -15,19 +15,19 @@
             key: "zipbomb",
             name: "Zipbomb",
             description: "A difficult movement game.",
-            url: "/zipbomb.html",
+            url: "/hackathon-1/zipbomb.html",
         },
         {
             key: "carcrosser",
             name: "Car Crosser",
             description: "Don't crash. The game gets harder over time.",
-            url: "/cargame.html",
+            url: "/hackathon-1/cargame.html",
         },
         {
             key: "pong",
             name: "Pong",
             description: "Classic pong.",
-            url: "/pong.html",
+            url: "/hackathon-1/pong.html",
         },
     ];
 
