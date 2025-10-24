@@ -17,19 +17,61 @@
         wall: "#",
         floor: ".", // or space
         player: "@",
-        enemy: "E",
+        enemyUp: "^",
+        enemyDown: "v",
+        enemyLeft: "<",
+        enemyRight: ">",
         coin: "$",
-        victory: "V",
+        victory: "Z",
     };
 
     // Token to CSS class
     const CLASS = {
         [SYM.wall]: "token-wall",
         [SYM.player]: "token-player",
-        [SYM.enemy]: "token-enemy",
+        [SYM.enemyUp]: "token-enemy",
+        [SYM.enemyDown]: "token-enemy",
+        [SYM.enemyLeft]: "token-enemy",
+        [SYM.enemyRight]: "token-enemy",
         [SYM.coin]: "token-coin",
         [SYM.victory]: "token-victory",
     };
+
+    // Enemy helpers
+    const ENEMY_CHARS = new Set([
+        SYM.enemyUp,
+        SYM.enemyDown,
+        SYM.enemyLeft,
+        SYM.enemyRight,
+    ]);
+    const charToDir = (ch) =>
+        ({
+            [SYM.enemyUp]: "up",
+            [SYM.enemyDown]: "down",
+            [SYM.enemyLeft]: "left",
+            [SYM.enemyRight]: "right",
+        }[ch]);
+    const dirToChar = (dir) =>
+        ({
+            up: SYM.enemyUp,
+            down: SYM.enemyDown,
+            left: SYM.enemyLeft,
+            right: SYM.enemyRight,
+        }[dir] || SYM.enemyDown);
+    const dirDelta = (dir) =>
+        ({
+            up: { dc: 0, dr: -1 },
+            down: { dc: 0, dr: 1 },
+            left: { dc: -1, dr: 0 },
+            right: { dc: 1, dr: 0 },
+        }[dir] || { dc: 0, dr: 1 });
+    const oppositeDir = (dir) =>
+        ({
+            up: "down",
+            down: "up",
+            left: "right",
+            right: "left",
+        }[dir] || "down");
 
     // Game state
     const state = {
@@ -43,18 +85,23 @@
         collected: 0,
         won: false,
         cmdBuf: "", // command-line buffer after ':'
-        currentText: "", // last loaded/exported text for restart
+        currentText: "", // last exported text (without @)
+        originalText: "", // last loaded text including '@' (used for restart)
+        spawnx: 0,
+        spawny: 0,
+        enemies: [], // {x,y,dir}
+        enemyTimerId: null,
     };
 
     // Sample level to start
     const SAMPLE = [
         "################",
-        "#@..$.....E...#",
-        "#..###..###...#",
-        "#..#......#..V#",
-        "#..#..$...#...#",
-        "#..###..###...#",
-        "#.............#",
+        "#@..$..v.......#",
+        "#..###..###....#",
+        "#..#......#...Z#",
+        "#..#..$..<#....#",
+        "#..###..###....#",
+        "#.....^........#",
         "################",
     ].join("\n");
 
@@ -80,13 +127,20 @@
         const cols = Math.max(...lines.map((l) => l.length));
         const padded = lines.map((l) => l.padEnd(cols, " "));
         const grid = padded.map((l) => l.split(""));
+        // keep a normalized copy that retains '@' for proper restarts
+        state.originalText = padded.join("\n");
         let px = 0,
             py = 0;
+        const enemies = [];
         for (let r = 0; r < grid.length; r++) {
             for (let c = 0; c < grid[r].length; c++) {
-                if (grid[r][c] === SYM.player) {
+                const ch = grid[r][c];
+                if (ch === SYM.player) {
                     px = c;
                     py = r;
+                    grid[r][c] = SYM.floor;
+                } else if (ENEMY_CHARS.has(ch)) {
+                    enemies.push({ x: c, y: r, dir: charToDir(ch) });
                     grid[r][c] = SYM.floor;
                 }
             }
@@ -96,16 +150,40 @@
         state.grid = grid;
         state.px = px;
         state.py = py;
+        state.spawnx = px;
+        state.spawny = py;
         state.collected = 0;
         state.won = false;
         state.countBuf = "";
         state.cmdBuf = "";
-        // Save a normalized copy for restart (:q)
+        // Save a normalized export (without @) separately if needed elsewhere
         state.currentText = exportMapToText();
+        state.enemies = enemies;
+        startEnemyLoop();
     }
 
     function exportMapToText() {
-        return state.grid.map((row) => row.join("")).join("\n");
+        // Include player and enemies so exports are reloadable
+        const out = state.grid.map((row) => row.slice());
+        for (const e of state.enemies) {
+            if (
+                e.y >= 0 &&
+                e.y < out.length &&
+                e.x >= 0 &&
+                e.x < out[e.y].length
+            ) {
+                out[e.y][e.x] = dirToChar(e.dir);
+            }
+        }
+        if (
+            state.py >= 0 &&
+            state.py < out.length &&
+            state.px >= 0 &&
+            state.px < (out[state.py]?.length || 0)
+        ) {
+            out[state.py][state.px] = SYM.player;
+        }
+        return out.map((row) => row.join("")).join("\n");
     }
 
     // Rendering
@@ -121,7 +199,13 @@
         const lines = [];
         for (let r = 0; r < state.rows; r++) {
             const row = state.grid[r].slice();
-            // ensure exactly one player rendered: override cell at player pos visually
+            // overlay enemies on this row
+            for (const e of state.enemies) {
+                if (e.y === r && e.x >= 0 && e.x < row.length) {
+                    row[e.x] = dirToChar(e.dir);
+                }
+            }
+            // ensure exactly one player rendered: override cell at player pos visually (player on top)
             if (r === state.py) {
                 row[state.px] = SYM.player;
             }
@@ -148,6 +232,51 @@
         return state.grid[r][c] === SYM.wall;
     }
 
+    function enemiesStep() {
+        if (state.won) return;
+        let moved = false;
+        for (const e of state.enemies) {
+            const { dc, dr } = dirDelta(e.dir);
+            let nx = clamp(e.x + dc, 0, state.cols - 1);
+            let ny = clamp(e.y + dr, 0, state.rows - 1);
+            if (isWall(nx, ny)) {
+                // bounce to opposite direction
+                e.dir = oppositeDir(e.dir);
+                const b = dirDelta(e.dir);
+                nx = clamp(e.x + b.dc, 0, state.cols - 1);
+                ny = clamp(e.y + b.dr, 0, state.rows - 1);
+                if (isWall(nx, ny)) {
+                    continue; // stuck
+                }
+            }
+            e.x = nx;
+            e.y = ny;
+            moved = true;
+        }
+
+        // collision with player -> reset to spawn
+        for (const e of state.enemies) {
+            if (e.x === state.px && e.y === state.py) {
+                state.px = state.spawnx;
+                state.py = state.spawny;
+                break;
+            }
+        }
+        if (moved) {
+            render();
+            setStatus("");
+        }
+    }
+
+    function startEnemyLoop() {
+        if (state.enemyTimerId) {
+            clearInterval(state.enemyTimerId);
+            state.enemyTimerId = null;
+        }
+        if (!state.enemies || state.enemies.length === 0) return;
+        state.enemyTimerId = setInterval(enemiesStep, 300);
+    }
+
     function tryStep(dc, dr, count) {
         let steps = count || 1;
         while (steps-- > 0) {
@@ -164,6 +293,15 @@
             // victory
             if (state.grid[ny][nx] === SYM.victory) {
                 state.won = true;
+            }
+            // enemy collision
+            for (const e of state.enemies) {
+                if (e.x === state.px && e.y === state.py) {
+                    state.px = state.spawnx;
+                    state.py = state.spawny;
+                    steps = 0; // stop further stepping in this motion
+                    break;
+                }
             }
         }
         render();
@@ -204,9 +342,9 @@
                 const cmd = state.cmdBuf.trim();
                 // Minimal command support
                 if (cmd === "q") {
-                    // Restart current map
+                    // Restart current map from original text containing '@'
                     parseMapFromText(
-                        state.currentText || mapInputEl?.value || ""
+                        state.originalText || mapInputEl?.value || ""
                     );
                     render();
                     state.won = false;
