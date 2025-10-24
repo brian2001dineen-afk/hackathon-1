@@ -97,6 +97,8 @@
         victoryPositions: [],
         victoryActive: false,
         initialGrid: [],
+        fontSizePx: 14,
+        levelIndex: 0,
     };
 
     // Sample level to start
@@ -121,7 +123,9 @@
         const rightHtml = state.victoryActive
             ? `Get to the <span class="token-victory">Z</span>!`
             : `Coins ${state.collected}/${state.totalCoins}`;
-        const rightClass = state.victoryActive ? "status-right victory" : "status-right";
+        const rightClass = state.victoryActive
+            ? "status-right victory"
+            : "status-right";
         if (state.mode === "CMD") {
             statusEl.innerHTML = `<span class="status-left">:${state.cmdBuf}</span><span class="${rightClass}">${rightHtml}</span>`;
             return;
@@ -186,11 +190,11 @@
                 }
             }
         }
-    state.rows = grid.length;
+        state.rows = grid.length;
         state.cols = cols;
         state.grid = grid;
-    // snapshot initial grid (includes coins, excludes @, enemies, Z)
-    state.initialGrid = grid.map((row) => row.slice());
+        // snapshot initial grid (includes coins, excludes @, enemies, Z)
+        state.initialGrid = grid.map((row) => row.slice());
         state.px = px;
         state.py = py;
         state.spawnx = px;
@@ -207,7 +211,23 @@
         state.enemies = enemies;
         const tick = parseInt(header["enemytick"] ?? header["tick"], 10);
         state.enemyTickMs = Number.isFinite(tick) && tick > 0 ? tick : 300;
+        const fsz = parseInt(
+            header["fontsize"] ?? header["font"] ?? header["size"],
+            10
+        );
+        if (Number.isFinite(fsz) && fsz > 6 && fsz < 64) {
+            state.fontSizePx = fsz;
+        }
+        applyZoom();
         startEnemyLoop();
+    }
+
+    function applyZoom() {
+        const px = state.fontSizePx || 14;
+        if (bufferEl) bufferEl.style.setProperty("font-size", px + "px");
+        if (gutterEl) gutterEl.style.setProperty("font-size", px + "px");
+        bufferEl?.style.setProperty("--cell-font-size", px + "px");
+        gutterEl?.style.setProperty("--cell-font-size", px + "px");
     }
 
     function resetCoinsToInitial() {
@@ -256,16 +276,53 @@
 
     // Rendering
     function render() {
+        // compute vertical padding to center content, if viewport is taller than content
+        let topPad = 0,
+            bottomPad = 0;
+        if (viewportEl && bufferEl) {
+            const cs = getComputedStyle(bufferEl);
+            let lh = parseFloat(cs.lineHeight);
+            if (!Number.isFinite(lh) || lh <= 0) {
+                const fs = parseFloat(cs.fontSize) || 14;
+                lh = fs * 1.25;
+            }
+            const vh = viewportEl.clientHeight;
+            const visibleLines = Math.floor(vh / lh);
+            if (visibleLines > state.rows) {
+                const spare = visibleLines - state.rows;
+                topPad = Math.floor(spare / 2);
+                bottomPad = spare - topPad;
+            }
+        }
+
         // gutter
         const width = String(state.rows).length;
+        const padHtmlTop =
+            topPad > 0
+                ? Array.from(
+                      { length: topPad },
+                      () => `<div>&nbsp;</div>`
+                  ).join("")
+                : "";
         const numbersHtml = Array.from(
             { length: state.rows },
             (_, i) => `<div>${String(i + 1).padStart(width, " ")}</div>`
         ).join("");
-        gutterEl.innerHTML = numbersHtml;
+        const padHtmlBottom =
+            bottomPad > 0
+                ? Array.from(
+                      { length: bottomPad },
+                      () => `<div>&nbsp;</div>`
+                  ).join("")
+                : "";
+        gutterEl.innerHTML = padHtmlTop + numbersHtml + padHtmlBottom;
 
         // grid -> spans
         const lines = [];
+        // top padding lines in buffer
+        for (let p = 0; p < topPad; p++) {
+            lines.push(`<div>&nbsp;</div>`);
+        }
         for (let r = 0; r < state.rows; r++) {
             const row = state.grid[r].slice();
             // overlay victory tiles if active
@@ -300,7 +357,25 @@
         }
         // Important: avoid inserting raw newlines between block elements inside <pre>
         // which creates extra blank lines due to white-space: pre
+        // bottom padding lines in buffer
+        for (let p = 0; p < bottomPad; p++) {
+            lines.push(`<div>&nbsp;</div>`);
+        }
         bufferEl.innerHTML = lines.join("");
+    }
+
+    function loadLevelByIndex(idx) {
+        const levels = window.MAP_STORE || [];
+        if (!Array.isArray(levels) || levels.length === 0) return false;
+        const n = levels.length;
+        const clamped = ((idx % n) + n) % n;
+        state.levelIndex = clamped;
+        const text = String(levels[clamped] ?? "");
+        parseMapFromText(text);
+        if (mapInputEl) mapInputEl.value = text;
+        render();
+        setStatus(`Level ${clamped + 1}/${n}`);
+        return true;
     }
 
     // Movement and collision
@@ -449,6 +524,20 @@
                     state.mode = "NORMAL";
                     state.cmdBuf = "";
                     setStatus("Restarted");
+                } else if (/^zoom\s+\d+$/i.test(cmd)) {
+                    const n = parseInt(cmd.split(/\s+/)[1], 10);
+                    if (Number.isFinite(n) && n > 6 && n < 64) {
+                        state.fontSizePx = n;
+                        applyZoom();
+                        render();
+                        state.mode = "NORMAL";
+                        state.cmdBuf = "";
+                        setStatus(`Zoom set to ${n}px`);
+                    } else {
+                        state.mode = "NORMAL";
+                        state.cmdBuf = "";
+                        setStatus("Zoom must be between 7 and 63");
+                    }
                 } else {
                     state.mode = "NORMAL";
                     const msg = cmd ? `Unknown command: ${cmd}` : "";
@@ -493,6 +582,14 @@
             case "ArrowRight":
                 tryStep(1, 0, count);
                 break;
+            case "L":
+                // Next level
+                if (!loadLevelByIndex(state.levelIndex + 1)) setStatus("");
+                break;
+            case "J":
+                // Previous level
+                if (!loadLevelByIndex(state.levelIndex - 1)) setStatus("");
+                break;
             case ":":
                 // enter command-line mode
                 state.mode = "CMD";
@@ -516,9 +613,11 @@
         setStatus("Exported current map to textarea");
     });
 
-    // Init with sample
-    mapInputEl && (mapInputEl.value = SAMPLE);
-    parseMapFromText(SAMPLE);
+    // Init with map store if available; otherwise fallback to SAMPLE
+    if (!loadLevelByIndex(0)) {
+        mapInputEl && (mapInputEl.value = SAMPLE);
+        parseMapFromText(SAMPLE);
+    }
     render();
     setStatus("Type a count then hjkl to move.");
 

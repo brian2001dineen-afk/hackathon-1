@@ -30,21 +30,24 @@
         </div>
 
         <section class="mt-4">
-            <h2 class="h5">Map creator</h2>
-            <p class="text-secondary mb-2">
-                Edit the map text below and click Load. Symbols: # wall, @ player, v/^/&lt;/&gt; enemies,
-                $ coin, Z victory (appears only after all coins are collected), and . or space for floor.<br />
-                Optional header lines at the very top start with <code>;</code> for settings, e.g.
-                <code>; enemyTick=200</code> (also accepts <code>; tick=200</code>) to set enemy speed in ms.
-            </p>
-            <textarea class="form-control font-monospace" rows="8" id="map-input"></textarea>
-            <div class="mt-2 d-flex gap-2">
-                <button class="btn btn-primary btn-sm" id="load-map-btn">Load Map</button>
-                <button class="btn btn-outline-secondary btn-sm" id="export-map-btn">Export Current</button>
-            </div>
+            <details id="map-tools">
+                <summary class="h5" role="button">Map tools</summary>
+                <p class="text-secondary mb-2">
+                    Edit the map text below and click Load. Symbols: # wall, @ player, v/^/&lt;/&gt; enemies,
+                    $ coin, Z victory (appears only after all coins are collected), and . or space for floor.<br />
+                    Optional header lines at the very top start with <code>;</code> for settings, e.g.
+                    <code>; enemyTick=200</code> (also accepts <code>; tick=200</code>) to set enemy speed in ms.
+                </p>
+                <textarea class="form-control font-monospace" rows="8" id="map-input"></textarea>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" id="load-map-btn">Load Map</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="export-map-btn">Export Current</button>
+                </div>
+            </details>
         </section>
     </main>
 
+    <script src="assets/js/mapstore.js"></script>
     <script src="assets/js/vim_game.js"></script>
 </body>
 

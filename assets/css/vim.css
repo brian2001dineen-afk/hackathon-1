@@ -53,15 +53,22 @@ body {
     text-align: right;
     user-select: none;
 }
+.vim-gutter {
+    font-size: var(--cell-font-size, 14px);
+}
 .vim-gutter > div {
-    line-height: 1.25rem;
+    line-height: 1.25em;
 }
 .vim-buffer {
     flex: 1;
     margin: 0;
     padding: 0.5rem 0.75rem;
-    line-height: 1.25rem;
+    line-height: 1.25em;
+    font-size: var(--cell-font-size, 14px);
     white-space: pre;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center map horizontally */
 }
 
 /* Statusline */
@@ -129,12 +136,24 @@ body {
 
 /* Death shake animation */
 @keyframes screen-shake {
-    0% { transform: translate(0, 0); }
-    20% { transform: translate(-3px, 0); }
-    40% { transform: translate(3px, 0); }
-    60% { transform: translate(-2px, 0); }
-    80% { transform: translate(2px, 0); }
-    100% { transform: translate(0, 0); }
+    0% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(-3px, 0);
+    }
+    40% {
+        transform: translate(3px, 0);
+    }
+    60% {
+        transform: translate(-2px, 0);
+    }
+    80% {
+        transform: translate(2px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
 }
 .vim-viewport.shake {
     animation: screen-shake 250ms ease-in-out;
