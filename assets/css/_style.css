@@ -2,8 +2,8 @@
     --primary-font: "Hack", Courier, monospace;
 
     /* Theme */
-    /* --bg: #0b0c10; */
-    --bg: #888888;
+    --bg: #0b0c10;
+    /* --bg: #888888; */
     --bg-2: #111318;
     --fg: #e5f4f1;
     --muted: #8aa0a5;
@@ -25,7 +25,7 @@
 html,
 body {
     height: 100%;
-    background: linear-gradient(180deg, var(--bg), #c5c5c5 40%, var(--bg));
+    background: linear-gradient(180deg, var(--bg), var(--bg-2) 40%, var(--bg));
     color: var(--fg);
     font-family: var(--primary-font);
 }
