@@ -15,19 +15,19 @@
             key: "zipbomb",
             name: "Zipbomb",
             description: "A difficult movement game.",
-            url: "/hackathon-1/zipbomb.html",
+            url: "zipbomb.html",
         },
         {
             key: "carcrosser",
             name: "Car Crosser",
             description: "Don't crash. The game gets harder over time.",
-            url: "/hackathon-1/cargame.html",
+            url: "cargame.html",
         },
         {
             key: "pong",
             name: "Pong",
             description: "Classic pong.",
-            url: "/hackathon-1/pong.html",
+            url: "pong.html",
         },
     ];
 
@@ -50,6 +50,16 @@
         }
         outputEl.appendChild(line);
         scrollToBottom();
+    };
+
+    // Robust navigation that respects GitHub Pages project subpaths
+    const navigateTo = (url) => {
+        try {
+            const dest = new URL(url, window.location.href).toString();
+            window.location.href = dest;
+        } catch (_) {
+            window.location.href = url; // fallback
+        }
     };
 
     const printPrompted = (cmd) => {
@@ -117,7 +127,7 @@
             // For base implementation, we can navigate to anchors or future routes
             if (game.url && game.url !== "#") {
                 setTimeout(() => {
-                    window.location.href = game.url;
+                    navigateTo(game.url);
                 }, 400);
             }
         },
