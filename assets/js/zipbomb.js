@@ -7,6 +7,7 @@
     const gutterEl = document.getElementById("vim-gutter");
     const statusEl = document.getElementById("vim-statusline");
     const viewportEl = document.querySelector(".vim-viewport");
+    const filenameEl = document.querySelector(".filename");
     const mapInputEl = document.getElementById("map-input");
     const loadBtn = document.getElementById("load-map-btn");
     const exportBtn = document.getElementById("export-map-btn");
@@ -99,6 +100,7 @@
         initialGrid: [],
         fontSizePx: 14,
         levelIndex: 0,
+        levelTitle: "zipbomb.rar",
     };
 
     // Sample level to start
@@ -218,6 +220,15 @@
         if (Number.isFinite(fsz) && fsz > 6 && fsz < 64) {
             state.fontSizePx = fsz;
         }
+        // Level title (supports ; title=... or ; name=...)
+        const hdrTitle = header["title"] ?? header["name"];
+        if (hdrTitle && typeof hdrTitle === "string") {
+            state.levelTitle = hdrTitle;
+        } else {
+            // fallback to a generic label if none provided
+            state.levelTitle = `zipbomb.rar`;
+        }
+        if (filenameEl) filenameEl.textContent = state.levelTitle;
         applyZoom();
         startEnemyLoop();
     }

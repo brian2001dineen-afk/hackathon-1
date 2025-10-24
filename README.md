@@ -25,9 +25,9 @@ We initially started with the terminal homepage as a connector for the site game
 
 Early development of zipbomb:
 
-![](https://i.imgur.com/5yDt1M7.png)[^1]
+![](https://i.imgur.com/5yDt1M7.png)
 
-[^1]: Prototype image: the player being the red ball; enemy = blue ball; coin = yellow ball.
+Prototype image: the player being the red ball; enemy = blue ball; coin = yellow ball.
 
 Most of the time was spent on the foundational elements, including
 
@@ -35,7 +35,16 @@ Most of the time was spent on the foundational elements, including
 2. a level builder
 3. per-level enemy AI programming
 
-Once these elements were in place, focus was shifted towards graphics and audio implementation.
+The limitations of the canvas became apparent later on in development, mainly that it would be much smoother to use text directly for the games graphical interface, rather than trying to emulate a vim environment in canvas. After this early version was finished, the game was rewritten from the ground up.
+
+![](https://i.imgur.com/qSWBta9.png)
+
+Prototype image: the assets were converted to text characters and were styled to match the previous theme.
+
+After the base rewrite, more emphasis was focused on utilizing the text medium to the games advantage, including
+- ASCII art for some of the level design
+- Font options to change graphics without introducing blurriness or compression
+- Lightweight performance on GPU-limited machines
 
 ## Early Design Pong
 

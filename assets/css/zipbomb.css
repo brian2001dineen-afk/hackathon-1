@@ -76,6 +76,12 @@ body {
     align-items: center; /* center map horizontally */
 }
 
+/* Remove default focus outline that can appear as a white line next to the gutter */
+.vim-buffer:focus,
+.vim-buffer:focus-visible {
+    outline: none;
+}
+
 /* Statusline */
 .vim-statusline {
     background: var(--status-bg);
@@ -118,12 +124,23 @@ body {
     text-decoration: underline;
 }
 
-/* Cursor effect: underline the current cell position */
-.cursor-line .cell-cursor {
-    background: rgba(255, 255, 255, 0.06);
-    text-decoration: underline;
-    text-decoration-color: var(--cursor);
+/* Cursor effect: blink the background between transparent and var(--cursor) */
+/* .cursor-line .cell-cursor {
+    background-color: transparent;
+    text-decoration: none;
+    animation: cursor-blink 1s steps(1, end) infinite;
 }
+
+@keyframes cursor-blink {
+    0%,
+    49% {
+        background-color: var(--cursor);
+    }
+    50%,
+    100% {
+        background-color: transparent;
+    }
+} */
 
 /* Scrollbars */
 .vim-viewport::-webkit-scrollbar {
