@@ -62,7 +62,6 @@ body {
     padding: 0.5rem 0.75rem;
     line-height: 1.25rem;
     white-space: pre;
-    outline: none;
 }
 
 /* Statusline */
@@ -72,6 +71,21 @@ body {
     border-top: 1px solid #2a2f3a;
     padding: 0.25rem 0.5rem;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Status right area (coins) */
+.status-right {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* Emphasized status when victory is active */
+.status-right.victory {
+    color: var(--victory);
+    font-weight: 600;
 }
 
 /* Token colors via spans */
@@ -111,4 +125,17 @@ body {
 
 .font-monospace {
     font-family: Hack, Consolas, monospace;
+}
+
+/* Death shake animation */
+@keyframes screen-shake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-3px, 0); }
+    40% { transform: translate(3px, 0); }
+    60% { transform: translate(-2px, 0); }
+    80% { transform: translate(2px, 0); }
+    100% { transform: translate(0, 0); }
+}
+.vim-viewport.shake {
+    animation: screen-shake 250ms ease-in-out;
 }

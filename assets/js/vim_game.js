@@ -6,6 +6,7 @@
     const bufferEl = document.getElementById("vim-buffer");
     const gutterEl = document.getElementById("vim-gutter");
     const statusEl = document.getElementById("vim-statusline");
+    const viewportEl = document.querySelector(".vim-viewport");
     const mapInputEl = document.getElementById("map-input");
     const loadBtn = document.getElementById("load-map-btn");
     const exportBtn = document.getElementById("export-map-btn");
@@ -91,6 +92,11 @@
         spawny: 0,
         enemies: [], // {x,y,dir}
         enemyTimerId: null,
+        enemyTickMs: 300,
+        totalCoins: 0,
+        victoryPositions: [],
+        victoryActive: false,
+        initialGrid: [],
     };
 
     // Sample level to start
@@ -112,26 +118,56 @@
 
     function setStatus(message) {
         const pos = `${state.py + 1},${state.px + 1}`;
+        const rightHtml = state.victoryActive
+            ? `Get to the <span class="token-victory">Z</span>!`
+            : `Coins ${state.collected}/${state.totalCoins}`;
+        const rightClass = state.victoryActive ? "status-right victory" : "status-right";
         if (state.mode === "CMD") {
-            statusEl.textContent = `:${state.cmdBuf}`;
+            statusEl.innerHTML = `<span class="status-left">:${state.cmdBuf}</span><span class="${rightClass}">${rightHtml}</span>`;
             return;
         }
         const prefix = state.countBuf ? state.countBuf : "";
         const left = `-- ${state.mode} --`;
         const msg = message ? `  ${message}` : "";
-        statusEl.textContent = `${left}  ${pos}  ${prefix}${msg}`.trim();
+        const leftText = `${left}  ${pos}  ${prefix}${msg}`.trim();
+        statusEl.innerHTML = `<span class="status-left">${leftText}</span><span class="${rightClass}">${rightHtml}</span>`;
+    }
+
+    function triggerShake() {
+        if (!viewportEl) return;
+        viewportEl.classList.remove("shake");
+        // force reflow to restart animation
+        // eslint-disable-next-line no-unused-expressions
+        void viewportEl.offsetWidth;
+        viewportEl.classList.add("shake");
+        setTimeout(() => viewportEl.classList.remove("shake"), 260);
     }
 
     function parseMapFromText(text) {
-        const lines = text.replace(/\r/g, "").split("\n");
-        const cols = Math.max(...lines.map((l) => l.length));
-        const padded = lines.map((l) => l.padEnd(cols, " "));
+        const rawLines = text.replace(/\r/g, "").split("\n");
+        // header lines start with ';'
+        const header = {};
+        let idx = 0;
+        while (idx < rawLines.length && rawLines[idx].trim().startsWith(";")) {
+            const line = rawLines[idx].trim().slice(1).trim();
+            const [k, v] = line.split("=");
+            if (k && v) header[k.trim().toLowerCase()] = v.trim();
+            idx++;
+        }
+        const body = rawLines.slice(idx);
+        const cols = Math.max(...body.map((l) => l.length));
+        const padded = body.map((l) => l.padEnd(cols, " "));
         const grid = padded.map((l) => l.split(""));
-        // keep a normalized copy that retains '@' for proper restarts
-        state.originalText = padded.join("\n");
+        // keep a normalized copy including header for restarts
+        const headerNormalized = rawLines.slice(0, idx).join("\n");
+        state.originalText =
+            (headerNormalized ? headerNormalized + "\n" : "") +
+            padded.join("\n");
         let px = 0,
             py = 0;
         const enemies = [];
+        let coinCount = 0;
+        const vpos = [];
         for (let r = 0; r < grid.length; r++) {
             for (let c = 0; c < grid[r].length; c++) {
                 const ch = grid[r][c];
@@ -142,29 +178,61 @@
                 } else if (ENEMY_CHARS.has(ch)) {
                     enemies.push({ x: c, y: r, dir: charToDir(ch) });
                     grid[r][c] = SYM.floor;
+                } else if (ch === SYM.coin) {
+                    coinCount++;
+                } else if (ch === SYM.victory) {
+                    vpos.push({ x: c, y: r });
+                    grid[r][c] = SYM.floor;
                 }
             }
         }
-        state.rows = grid.length;
+    state.rows = grid.length;
         state.cols = cols;
         state.grid = grid;
+    // snapshot initial grid (includes coins, excludes @, enemies, Z)
+    state.initialGrid = grid.map((row) => row.slice());
         state.px = px;
         state.py = py;
         state.spawnx = px;
         state.spawny = py;
         state.collected = 0;
+        state.totalCoins = coinCount;
         state.won = false;
         state.countBuf = "";
         state.cmdBuf = "";
+        state.victoryPositions = vpos;
+        state.victoryActive = coinCount === 0;
         // Save a normalized export (without @) separately if needed elsewhere
         state.currentText = exportMapToText();
         state.enemies = enemies;
+        const tick = parseInt(header["enemytick"] ?? header["tick"], 10);
+        state.enemyTickMs = Number.isFinite(tick) && tick > 0 ? tick : 300;
         startEnemyLoop();
     }
 
+    function resetCoinsToInitial() {
+        // Restore the grid to the initial state (coins reset)
+        if (state.initialGrid && state.initialGrid.length) {
+            state.grid = state.initialGrid.map((row) => row.slice());
+        }
+        state.collected = 0;
+        state.victoryActive = state.totalCoins === 0;
+        state.won = false;
+    }
+
     function exportMapToText() {
-        // Include player and enemies so exports are reloadable
+        // Include player, enemies, and victory tiles so exports are reloadable
         const out = state.grid.map((row) => row.slice());
+        for (const vp of state.victoryPositions) {
+            if (
+                vp.y >= 0 &&
+                vp.y < out.length &&
+                vp.x >= 0 &&
+                vp.x < out[vp.y].length
+            ) {
+                out[vp.y][vp.x] = SYM.victory;
+            }
+        }
         for (const e of state.enemies) {
             if (
                 e.y >= 0 &&
@@ -190,15 +258,24 @@
     function render() {
         // gutter
         const width = String(state.rows).length;
-        gutterEl.innerHTML = Array.from(
+        const numbersHtml = Array.from(
             { length: state.rows },
             (_, i) => `<div>${String(i + 1).padStart(width, " ")}</div>`
         ).join("");
+        gutterEl.innerHTML = numbersHtml;
 
         // grid -> spans
         const lines = [];
         for (let r = 0; r < state.rows; r++) {
             const row = state.grid[r].slice();
+            // overlay victory tiles if active
+            if (state.victoryActive) {
+                for (const vp of state.victoryPositions) {
+                    if (vp.y === r && vp.x >= 0 && vp.x < row.length) {
+                        row[vp.x] = SYM.victory;
+                    }
+                }
+            }
             // overlay enemies on this row
             for (const e of state.enemies) {
                 if (e.y === r && e.x >= 0 && e.x < row.length) {
@@ -255,16 +332,20 @@
         }
 
         // collision with player -> reset to spawn
+        let died = false;
         for (const e of state.enemies) {
             if (e.x === state.px && e.y === state.py) {
                 state.px = state.spawnx;
                 state.py = state.spawny;
+                resetCoinsToInitial();
+                died = true;
                 break;
             }
         }
-        if (moved) {
+        if (moved || died) {
             render();
-            setStatus("");
+            setStatus(died ? "Respawned" : "");
+            if (died) triggerShake();
         }
     }
 
@@ -274,7 +355,7 @@
             state.enemyTimerId = null;
         }
         if (!state.enemies || state.enemies.length === 0) return;
-        state.enemyTimerId = setInterval(enemiesStep, 300);
+        state.enemyTimerId = setInterval(enemiesStep, state.enemyTickMs);
     }
 
     function tryStep(dc, dr, count) {
@@ -289,17 +370,34 @@
             if (state.grid[ny][nx] === SYM.coin) {
                 state.collected++;
                 state.grid[ny][nx] = SYM.floor;
+                if (
+                    !state.victoryActive &&
+                    state.collected >= state.totalCoins
+                ) {
+                    state.victoryActive = true;
+                }
             }
             // victory
-            if (state.grid[ny][nx] === SYM.victory) {
-                state.won = true;
+            if (state.victoryActive) {
+                for (const vp of state.victoryPositions) {
+                    if (vp.x === nx && vp.y === ny) {
+                        state.won = true;
+                        if (state.enemyTimerId) {
+                            clearInterval(state.enemyTimerId);
+                            state.enemyTimerId = null;
+                        }
+                        break;
+                    }
+                }
             }
             // enemy collision
             for (const e of state.enemies) {
                 if (e.x === state.px && e.y === state.py) {
                     state.px = state.spawnx;
                     state.py = state.spawny;
+                    resetCoinsToInitial();
                     steps = 0; // stop further stepping in this motion
+                    triggerShake();
                     break;
                 }
             }
