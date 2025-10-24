@@ -8,7 +8,14 @@ This website serves as a base for 3 minigames made over the course of 3 days. Th
 
 ### User Stories
 
-…
+-   As a user, I want to access multiple games from a single homepage so I can easily choose what to play.
+-   As a user, I want each game to be visually consistent and easy to understand.
+-   As a user, I want the site to work well on both desktop and mobile devices.
+-   As a user, I want to see my score or progress in each game.
+-   As a user, I want to return to the arcade menu from any game.
+
+    Here are some more of our user stories, we used the Kanban board on github.
+    ![user story](assets/images/userstories.png)
 
 ## Early Design
 
@@ -97,7 +104,7 @@ Early development included:
 
 Pong
 
-The main bug in pong is the AI is very janky and is to easy to play against, at one point it was unbeatable.
+-The main bug in pong is the AI paddle is very janky movement wise and is to easy to play against.
 
 …
 
@@ -114,6 +121,7 @@ I want to make the following future improvements for Pong:
 -   Add sound effects when the ball bounces off walls or the player or AI score.
 
 Car Crosser:
+
 1. Adding a difficultly setting to the main menu which would increase the oncoming cars speeds or make the cars themselves bigger.
 2. Adding a score leaderboard based on how long you drove before crashing.
 3. Have the car turn when the user drives left or right. (Would be challenging due to changes in collision)
@@ -122,9 +130,18 @@ Car Crosser:
 
 For this project we used the following technologies
 
-HTML 5 Canvas
-Javascript
-CSS
+-   HTML 5 Canvas
+-   Javascript
+-   CSS
+
+We used vscode as our code editor of choice.
+
+We watched tutorials on Canvas that Stephen told us about by chris cross that were really helpful in getting started with canvas.
+
+[Watch this video](https://youtu.be/EO6OkltgudE?si=tpG6Lds2HoD6zsKk)
+
+We also read documentation about canvas provided by MDN which also aided us in making our games.
+[Canvas API – MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 
 …
 
