@@ -108,6 +108,7 @@ function main() {
             this.player.x = this.player.xStart;
             this.player.y = this.player.yStart;
             this.carsList.push(this.createCar(0));
+            timer = carTimer();
             timer.start();
             this.loop();
 
