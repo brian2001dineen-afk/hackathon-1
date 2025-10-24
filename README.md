@@ -80,6 +80,14 @@ Early development included:
 
 ### Navigation & User Experience
 
+Main Lobby
+Navigation in the main lobby is quite intuitive. The interface is designed in the shape of a shell, where users can type one of two commands: "help" to see available options, or "list" to view all games. After that, users can type the name of the game they want to play and press Enter. Alternatively, they can use the graphical menu below the shell and select a game by clicking. This design provides a smooth and intuitive user experience.
+![Wireframe3](assets/images/mainlobbyshell.png)
+
+Pong
+Navigation for pong is simple, there is a start button to start the game. There is also a menu button which will take you back to the home page so you can select to play another game.
+![Wireframe3](assets/images/pongNav.png)
+
 -   **Accessibility options**: graphical game menu
 -   …
 
