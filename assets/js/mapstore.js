@@ -6,17 +6,17 @@
 // Then followed by ASCII map rows.
 (function () {
     const LANDING = [
-        "; fontsize=16",
+        "; fontsize=20",
         "   ________ ____  ____   ___  __  __ ____  ",
         "  |__  /_ _|  _ \\| __ ) / _ \\|  \\/  | __ ) ",
         "    / / | || |_) |  _ \\| | | | |\\/| |  _ \\ ",
         "   / /_ | ||  __/| |_) | |_| | |  | | |_) |",
         "  /____|___|_|   |____/ \\___/|_|  |_|____/ ",
         "",
-        "    MoVe: h j k l  or  Arrow Keys",
-        "       PreV/Next leVel: J / L",
+        "         h j k l  or  Arrow Keys",
+        "         pre/nxt  map:  J  /  L",
         "",
-        "@      get to the z to start!       Z",
+        "  @       get to the z to start!         Z",
     ].join("\n");
 
     const LEVEL_1 = [
