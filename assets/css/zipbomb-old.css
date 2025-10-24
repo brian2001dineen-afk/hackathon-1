@@ -1,0 +1,11 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    color: brown
+}
+
+#game-canvas {
+    border: 1px solid #ff0000;
+    margin: auto;
+}
