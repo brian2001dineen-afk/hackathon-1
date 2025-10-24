@@ -13,8 +13,8 @@ function carTimer() {
     const timer = {
         time: 0,
         roadScrollSpeed: 1, //Starting speed which the roads scroll downwards
-        roadIncrement: 0.2, //Scrolling speed increase per second
-        speedCap: 8, // Max scroll speed
+        roadIncrement: 0.1, //Scrolling speed increase per second
+        speedCap: 4, // Max scroll speed
         interval: null,
         /** Start timer counter */
         start() {

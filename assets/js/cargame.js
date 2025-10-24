@@ -19,7 +19,7 @@ function main() {
             [4, 8],
             [6, 12],
         ],
-        difficultyIndex: 2, // Change difficulty level 0-2
+        difficultyIndex: 0, // Change difficulty level 0-2
         carColours: [
             "red",
             "cyan",
@@ -34,7 +34,7 @@ function main() {
         carsList: [], // Array where the cars on screen are stored
         player: {
             size: 40, //Player size
-            step: 4, //Player speed
+            step: 3, //Player speed
             keys: {},
             colour: "blue",
             x: 0,
