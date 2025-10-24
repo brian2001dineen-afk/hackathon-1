@@ -5,63 +5,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="Description" content="Enter your description here" />
-    <!-- BS -->
+    <title>Vim Game</title>
+    <!-- Bootstrap (optional for layout/utilities) -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.8/css/bootstrap.min.css" />
-    <!-- FA -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <!-- Personal styling -->
-    <link rel="stylesheet" href="assets/css/_style.css" />
-    <!-- Game styling -->
-    <link rel="stylesheet" href="assets/css/zipbomb.css" />
     <!-- Hack font -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css" />
-    <title>@zipbomb</title>
+    <!-- Vim game CSS -->
+    <link rel="stylesheet" href="assets/css/zipbomb.css" />
 </head>
 
 <body>
-    <header></header>
+    <main class="container-fluid py-3">
+        <div class="vim-screen mx-auto" aria-label="Vim-like game editor">
+            <div class="vim-topline d-flex justify-content-between">
+                <div class="filename">vimgame.txt</div>
+                <div class="encoding">utf-8</div>
+            </div>
+            <div class="vim-viewport">
+                <div class="vim-gutter" aria-hidden="true" id="vim-gutter"></div>
+                <pre class="vim-buffer" id="vim-buffer" role="textbox" aria-readonly="true" tabindex="0"></pre>
+            </div>
+            <div class="vim-statusline" id="vim-statusline">-- NORMAL -- 1,1 All</div>
+        </div>
 
-    <main>
-        <canvas id="game-canvas"></canvas>
-
-        <ul class="debug-stats">
-            <li id="key">
-                last input:
-            </li>
-            <li id="level">
-                level:
-            </li>
-            <li id="score">
-                score:
-            </li>
-            <li id="time">
-                time:
-            </li>
-            <li id="won">
-                won:
-            </li>
-            <li id="deaths">
-                deaths:
-            </li>
-        </ul>
+        <section class="mt-4">
+            <details id="map-tools">
+                <summary class="h5" role="button">Map tools</summary>
+                <p class="text-secondary mb-2">
+                    Edit the map text below and click Load. Symbols: # wall, @ player, v/^/&lt;/&gt; enemies,
+                    $ coin, Z victory (appears only after all coins are collected), and . or space for floor.<br />
+                    Optional header lines at the very top start with <code>;</code> for settings, e.g.
+                    <code>; enemyTick=200</code> (also accepts <code>; tick=200</code>) to set enemy speed in ms.
+                </p>
+                <textarea class="form-control font-monospace" rows="8" id="map-input"></textarea>
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-primary btn-sm" id="load-map-btn">Load Map</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="export-map-btn">Export Current</button>
+                </div>
+            </details>
+        </section>
     </main>
 
-    <!-- Footer (leaving empty for now) -->
-    <footer></footer>
-
-    <!-- Main script -->
-    <script src="assets/js/_script.js"></script>
-    <!-- Game script -->
-    <script src="assets/js/maps.js"></script>
+    <script src="assets/js/mapstore.js"></script>
     <script src="assets/js/zipbomb.js"></script>
-    <!-- Fontawesome kit -->
-    <script src="https://kit.fontawesome.com/b2a9a53cd1.js" crossorigin="anonymous"></script>
-    <!-- Popper -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-    <!-- Bootstrap script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.8/js/bootstrap.min.js"></script>
 </body>
 
 </html>
