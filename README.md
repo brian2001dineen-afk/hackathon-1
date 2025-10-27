@@ -4,6 +4,10 @@
 
 This website serves as a base for 3 minigames made over the course of 3 days. These minigames are accesed on the main page through a terminal style interface. We wanted to capture some of the games we were fond of on our youth. As well as this, we wanted to give an added sense of nostalgia through interacting with a command line interface.
 
+## LINK TO LIVE SITE
+
+[Welcome User](https://brian2001dineen-afk.github.io/hackathon-1/)
+
 ## Table of Contents
 
 -   [Hackathon title](#hackathon-title)
