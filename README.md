@@ -71,10 +71,13 @@ Early development included:
 2. Creating other shapes that moved around the screen acting as obstacles.
 3. Create events when the player square collided with an obstacle shape.
 
-![EarlyDevelopment1](assets\cargameAssets\cargameEarlyDev1.png)
-![EarlyDevelopment2](assets\cargameAssets\cargameEarlyDev2.png)
-![EarlyDevelopment3](assets\cargameAssets\cargameEarlyDev3.png)
+![EarlyDevelopment1](assets/cargameAssets/cargameEarlyDev1.png)
 
+First I made a square which could be moved around the canvas with the wasd keys and added other moving shapes which bounced across the screen.
+
+![EarlyDevelopment2](assets/cargameAssets/cargameEarlyDev2.png)
+
+I then inplemented collision detection between the player and the other moving shapes. I then made the other shapes scroll and loop across the canvas, also added some roads and a background.
 
 ## Features
 
