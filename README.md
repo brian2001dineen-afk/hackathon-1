@@ -89,6 +89,14 @@ Early development included:
 
 ## Features
 
+-   **Arcade Menu** — Homepage listing all available games.
+-   **Individual Games**
+    -   Zipbomb
+    -   Carcrosser
+    -   Pong
+-   **Back to Menu** — Easy navigation to return to the arcade homepage.
+-   **Lightweight** — No login or backend required.
+
 ### Arcade Homepage
 
 …
@@ -180,6 +188,21 @@ We also read documentation about canvas provided by MDN which also aided us in m
 
 ## Deployment
 
+This project is deployed using **GitHub Pages**.
+
+### Steps we took
+
+1. We pushed the completed project to GitHub in a public repository.
+2. In **Repository Settings → Pages**, we selected the `main` branch and set the root (`/`) folder as the publishing source.
+3. GitHub Pages automatically built and deployed the site.
+4. The live link is now accessible at:  
+   `https://<username>.github.io/<repository-name>/`
+
+### Notes
+
+-   Any time we push new commits to the `main` branch, the site redeploys automatically.
+-   GitHub Pages is a good fit because the project is static (HTML/CSS/JS) and doesn’t require a backend or server-side processing.
+
 ## Credits
 
----
+These games were coded by the team members Brian, Stephen and Kevin.
