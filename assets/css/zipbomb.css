@@ -1,11 +1,182 @@
-body {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    color: brown
+/* Vim-like editor styling for the game */
+:root {
+    --bg: #1e1e1e;
+    --bg2: #181a1f;
+    --fg: #8d8d8d;
+    --muted: #8a8f98;
+    --accent: #61afef;
+    --gutter: #2b303b;
+    --status-bg: #0f1115;
+    --status-fg: #c6d0f5;
+    --cursor: #98c379;
+    --wall: #56b6c2; /* cyan */
+    --player: #e06c75; /* red */
+    --enemy: #61afef; /* blue */
+    --coin: #e5c07b; /* yellow */
+    --victory: #98c379; /* green */
 }
 
-#game-canvas {
-    border: 1px solid #ff0000;
-    margin: auto;
+html,
+body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: Hack, Consolas, monospace;
+}
+
+.vim-screen {
+    /* Make the container square and use most of the viewport */
+    width: min(95vmin, 1000px);
+    aspect-ratio: 1 / 1;
+    border: 1px solid #333;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+}
+
+.vim-topline {
+    background: var(--bg2);
+    color: var(--muted);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #2a2f3a;
+}
+.vim-viewport {
+    display: flex;
+    background: #0c0e13;
+    /* Fill remaining space inside the square container */
+    flex: 1 1 auto;
+    min-height: 0; /* allow child overflow scrolling in flex container */
+    overflow: auto;
+}
+.vim-gutter {
+    background: var(--gutter);
+    color: #6b717d;
+    padding: 0.5rem 0.5rem;
+    text-align: right;
+    user-select: none;
+}
+.vim-gutter {
+    font-size: var(--cell-font-size, 14px);
+}
+.vim-gutter > div {
+    line-height: 1.25em;
+}
+.vim-buffer {
+    flex: 1;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    line-height: 1.25em;
+    font-size: var(--cell-font-size, 14px);
+    white-space: pre;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* center map horizontally */
+}
+
+/* Remove default focus outline that can appear as a white line next to the gutter */
+.vim-buffer:focus,
+.vim-buffer:focus-visible {
+    outline: none;
+}
+
+/* Statusline */
+.vim-statusline {
+    background: var(--status-bg);
+    color: var(--status-fg);
+    border-top: 1px solid #2a2f3a;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Status right area (coins) */
+.status-right {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+/* Emphasized status when victory is active */
+.status-right.victory {
+    color: var(--victory);
+    font-weight: 600;
+}
+
+/* Token colors via spans */
+.token-wall {
+    color: var(--wall);
+}
+.token-player {
+    color: var(--player);
+}
+.token-enemy {
+    color: var(--enemy);
+}
+.token-coin {
+    color: var(--coin);
+}
+.token-victory {
+    color: var(--victory);
+    text-decoration: underline;
+}
+
+/* Cursor effect: blink the background between transparent and var(--cursor) */
+/* .cursor-line .cell-cursor {
+    background-color: transparent;
+    text-decoration: none;
+    animation: cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes cursor-blink {
+    0%,
+    49% {
+        background-color: var(--cursor);
+    }
+    50%,
+    100% {
+        background-color: transparent;
+    }
+} */
+
+/* Scrollbars */
+.vim-viewport::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+}
+.vim-viewport::-webkit-scrollbar-thumb {
+    background: #20242b;
+    border-radius: 8px;
+}
+
+.font-monospace {
+    font-family: Hack, Consolas, monospace;
+}
+
+/* Death shake animation */
+@keyframes screen-shake {
+    0% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(-3px, 0);
+    }
+    40% {
+        transform: translate(3px, 0);
+    }
+    60% {
+        transform: translate(-2px, 0);
+    }
+    80% {
+        transform: translate(2px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+.vim-viewport.shake {
+    animation: screen-shake 250ms ease-in-out;
 }
