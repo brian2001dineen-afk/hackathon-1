@@ -4,6 +4,31 @@
 
 This website serves as a base for 3 minigames made over the course of 3 days. These minigames are accesed on the main page through a terminal style interface. We wanted to capture some of the games we were fond of on our youth. As well as this, we wanted to give an added sense of nostalgia through interacting with a command line interface.
 
+## Table of Contents
+
+-   [Hackathon title](#hackathon-title)
+    -   [User Experience (UX)](#user-experience-ux)
+        -   [User Stories](#user-stories)
+    -   [Early Design](#early-design)
+        -   [Early Design Pong](#early-design-pong)
+        -   [Early development of Car Crosser](#early-development-of-car-crosser)
+    -   [Features](#features)
+        -   [Arcade Homepage](#arcade-homepage)
+        -   [Fully-Functional Games](#fully-functional-games)
+            -   [Zipbomb](#zipbomb)
+            -   [Frogger](#frogger)
+            -   [Pong](#pong)
+        -   [Navigation & User Experience](#navigation--user-experience)
+    -   [Design Philosophy](#design-philosophy)
+    -   [Testing](#testing)
+        -   [Manual Testing](#manual-testing)
+        -   [Browser Validation](#browser-validation)
+    -   [Known Bugs](#known-bugs)
+    -   [Future Improvements](#future-improvements)
+    -   [Technologies and References](#technologies-and-references)
+    -   [Deployment](#deployment)
+    -   [Credits](#credits)
+
 ## User Experience (UX)
 
 ### User Stories
