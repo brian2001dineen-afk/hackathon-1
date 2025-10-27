@@ -402,6 +402,12 @@ function main() {
                     this.c.font = "70px Bungee";
                     const gameOverMessage = "OH NO!";
                     const textWidth = this.c.measureText(gameOverMessage).width;
+                    this.c.strokeStyle = "white";
+                    this.c.strokeText(
+                        gameOverMessage,
+                        (this.canvasWidth - textWidth) / 2,
+                        this.canvasHeight / 2 - 50
+                    );
                     this.c.fillText(
                         gameOverMessage,
                         (this.canvasWidth - textWidth) / 2,
@@ -412,6 +418,11 @@ function main() {
                         "You drove for: " + timer.time.toFixed(2) + " seconds";
                     const textWidth2 =
                         this.c.measureText(gameOverMessage2).width;
+                    this.c.strokeText(
+                        gameOverMessage2,
+                        (this.canvasWidth - textWidth2) / 2,
+                        this.canvasHeight / 2 + 20
+                    );
                     this.c.fillText(
                         gameOverMessage2,
                         (this.canvasWidth - textWidth2) / 2,
@@ -421,6 +432,11 @@ function main() {
                     const gameOverMessage3 = "Press r to restart";
                     const textWidth3 =
                         this.c.measureText(gameOverMessage3).width;
+                    this.c.strokeText(
+                        gameOverMessage3,
+                        (this.canvasWidth - textWidth3) / 2,
+                        this.canvasHeight / 2 + 90
+                    );
                     this.c.fillText(
                         gameOverMessage3,
                         (this.canvasWidth - textWidth3) / 2,
