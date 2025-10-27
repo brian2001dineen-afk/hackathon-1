@@ -61,7 +61,7 @@ I then drew two boundary lines on the canvas and that was it the design was done
 
 I spent the most time on the AI player, trying to improve it, by not making it to hard or to easy.
 
-## Early development of Car Crosser:
+## Early Deign Car Crosser
 
 Initially the game was designed to be like the game frogger, but over time the game turned into a game where you are a car driving while avoiding oncoming cars.
 
@@ -70,6 +70,11 @@ Early development included:
 1. Creating a square the user could control with the keyboard.
 2. Creating other shapes that moved around the screen acting as obstacles.
 3. Create events when the player square collided with an obstacle shape.
+
+![EarlyDevelopment1](assets\cargameAssets\cargameEarlyDev1.png)
+![EarlyDevelopment2](assets\cargameAssets\cargameEarlyDev2.png)
+![EarlyDevelopment3](assets\cargameAssets\cargameEarlyDev3.png)
+
 
 ## Features
 
