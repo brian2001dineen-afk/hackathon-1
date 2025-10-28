@@ -169,6 +169,11 @@ We ran our html pages through
 -   pong.html
     ![pong.html](assets/images/ponghtml.png)
 
+-   css Validation
+
+-   Lighhouse
+    ![lighthouse](assets/images/lighthousetest.png)
+
 ## Known Bugs
 
 Pong
