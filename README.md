@@ -90,7 +90,7 @@ I then drew two boundary lines on the canvas and that was it the design was done
 
 I spent the most time on the AI player, trying to improve it, by not making it to hard or to easy.
 
-## Early development of Car Crosser:
+## Early Design Car Crosser
 
 Initially the game was designed to be like the game frogger, but over time the game turned into a game where you are a car driving while avoiding oncoming cars.
 
@@ -99,6 +99,14 @@ Early development included:
 1. Creating a square the user could control with the keyboard.
 2. Creating other shapes that moved around the screen acting as obstacles.
 3. Create events when the player square collided with an obstacle shape.
+
+![cargameEarlyDevelopment1](assets/cargameAssets/cargameEarlyDev1.png)
+
+First I made a square which could be moved around the canvas with the wasd keys and added other moving shapes which bounced across the screen.
+
+![cargameEarlyDevelopment2](assets/cargameAssets/cargameEarlyDev2.png)
+
+I then inplemented collision detection between the player and the other moving shapes. I then made the other shapes scroll and loop across the canvas, also added some roads and a background.
 
 ## Features
 
@@ -141,6 +149,9 @@ The homepage acts as the central hub for the arcade. It uses a terminal-style in
 
 ### Navigation & User Experience
 
+![cargameMenu](assets/cargameAssets/cargameMenu.png)
+
+Car crosser navigation is done using the large button below the canvas which will take the user back to the main menu if they should choose. All user navigation within the actual game is done with key presses which are display in the game at the appropriate times.
 Main Lobby
 Navigation in the main lobby is quite intuitive. The interface is designed in the shape of a shell, where users can type one of two commands: "help" to see available options, or "list" to view all games. After that, users can type the name of the game they want to play and press Enter. Alternatively, they can use the graphical menu below the shell and select a game by clicking. This design provides a smooth and intuitive user experience.
 ![Wireframe3](assets/images/mainlobbyshell.png)
@@ -191,7 +202,7 @@ I want to make the following future improvements for Pong:
 
 Car Crosser:
 
-1. Adding a difficultly setting to the main menu which would increase the oncoming cars speeds or make the cars themselves bigger.
+1. Adding a difficulty setting to the main menu which would increase the oncoming cars speeds or make the cars themselves bigger.
 2. Adding a score leaderboard based on how long you drove before crashing.
 3. Have the car turn when the user drives left or right. (Would be challenging due to changes in collision)
 
