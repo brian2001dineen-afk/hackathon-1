@@ -160,6 +160,8 @@ Navigation for pong is simple, there is a start button to start the game. There 
 
 We ran our html pages through
 
+-   lobby.html
+    ![lobby.html](assets/images/lobbyhtml.png)
 -   cargame.html
     ![cargame.html](assets/images/cargamehtml.png)
 
