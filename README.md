@@ -164,6 +164,10 @@ We ran our html pages through
     ![lobby.html](assets/images/lobbyhtml.png)
 -   cargame.html
     ![cargame.html](assets/images/cargamehtml.png)
+-   zipbomb.html
+    ![zipbomb.html](assets/images/zipbombhtml.png)
+-   pong.html
+    ![pong.html](assets/images/ponghtml.png)
 
 ## Known Bugs
 
