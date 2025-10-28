@@ -167,8 +167,6 @@ Navigation for pong is simple, there is a start button to start the game. There 
 -   pong.html
     ![pong.html](assets/images/ponghtml.png)
 
--   css Validation
-
 -   Lighhouse
     ![lighthouse](assets/images/lighthousetest.png)
 
