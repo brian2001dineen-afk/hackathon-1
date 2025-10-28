@@ -4,6 +4,35 @@
 
 This website serves as a base for 3 minigames made over the course of 3 days. These minigames are accesed on the main page through a terminal style interface. We wanted to capture some of the games we were fond of on our youth. As well as this, we wanted to give an added sense of nostalgia through interacting with a command line interface.
 
+## LINK TO LIVE SITE
+
+[Welcome User](https://brian2001dineen-afk.github.io/hackathon-1/)
+
+## Table of Contents
+
+-   [Hackathon title](#hackathon-title)
+    -   [User Experience (UX)](#user-experience-ux)
+        -   [User Stories](#user-stories)
+    -   [Early Design](#early-design)
+        -   [Early Design Pong](#early-design-pong)
+        -   [Early development of Car Crosser](#early-development-of-car-crosser)
+    -   [Features](#features)
+        -   [Arcade Homepage](#arcade-homepage)
+        -   [Fully-Functional Games](#fully-functional-games)
+            -   [Zipbomb](#zipbomb)
+            -   [Frogger](#frogger)
+            -   [Pong](#pong)
+        -   [Navigation & User Experience](#navigation--user-experience)
+    -   [Design Philosophy](#design-philosophy)
+    -   [Testing](#testing)
+        -   [Manual Testing](#manual-testing)
+        -   [Browser Validation](#browser-validation)
+    -   [Known Bugs](#known-bugs)
+    -   [Future Improvements](#future-improvements)
+    -   [Technologies and References](#technologies-and-references)
+    -   [Deployment](#deployment)
+    -   [Credits](#credits)
+
 ## User Experience (UX)
 
 ### User Stories
@@ -81,25 +110,55 @@ I then inplemented collision detection between the player and the other moving s
 
 ## Features
 
+-   **Arcade Menu** — Homepage listing all available games.
+-   **Individual Games**
+    -   Zipbomb
+    -   Carcrosser
+    -   Pong
+-   **Back to Menu** — Easy navigation to return to the arcade homepage.
+-   **Lightweight** — No login or backend required.
+
 ### Arcade Homepage
+
+The homepage acts as the central hub for the arcade. It uses a terminal-style interface where users can type commands such as `help`, `list`, or the name of a game to launch it. For users who prefer clicking, a graphical menu is also provided below the terminal. From this page, players can easily access all available games and return to it from any game at any time.
 
 …
 
 ### Fully-Functional Games
 
-…
+### Zipbomb
 
-#### Zipbomb
+-   **Description:** Navigate a red ball through moving obstacles to collect coins while avoiding enemies.
+-   **Controls:** Arrow keys to move.
+-   **Objective:** Collect all coins to complete the level.
+-   **Features:** Multiple levels, per-level enemy AI, collision detection, and level progression.
 
-#### Frogger
+### Frogger / Car Crosser
 
-#### Pong
+-   **Description:** Drive a car across lanes of traffic without crashing into oncoming cars.
+-   **Controls:** Arrow keys for movement.
+-   **Objective:** Reach the finish line safely.
+-   **Features:** Increasing difficulty, moving obstacles, simple scoring.
+
+### Pong
+
+-   **Description:** Classic pong game with player vs computer.
+-   **Controls:** Arrow keys or W/S to move your paddle.
+-   **Objective:** Score more points than the computer.
+-   **Features:** AI opponent, score tracking, start/reset buttons, simple sound effects.
 
 ### Navigation & User Experience
 
 ![cargameMenu](assets/cargameAssets/cargameMenu.png)
 
 Car crosser navigation is done using the large button below the canvas which will take the user back to the main menu if they should choose. All user navigation within the actual game is done with key presses which are display in the game at the appropriate times.
+Main Lobby
+Navigation in the main lobby is quite intuitive. The interface is designed in the shape of a shell, where users can type one of two commands: "help" to see available options, or "list" to view all games. After that, users can type the name of the game they want to play and press Enter. Alternatively, they can use the graphical menu below the shell and select a game by clicking. This design provides a smooth and intuitive user experience.
+![Wireframe3](assets/images/mainlobbyshell.png)
+
+Pong
+Navigation for pong is simple, there is a start button to start the game. There is also a menu button which will take you back to the home page so you can select to play another game.
+![Wireframe3](assets/images/pongNav.png)
 
 -   **Accessibility options**: graphical game menu
 -   …
@@ -168,6 +227,21 @@ We also read documentation about canvas provided by MDN which also aided us in m
 
 ## Deployment
 
+This project is deployed using **GitHub Pages**.
+
+### Steps we took
+
+1. We pushed the completed project to GitHub in a public repository.
+2. In **Repository Settings → Pages**, we selected the `main` branch and set the root (`/`) folder as the publishing source.
+3. GitHub Pages automatically built and deployed the site.
+4. The live link is now accessible at:  
+   `https://<username>.github.io/<repository-name>/`
+
+### Notes
+
+-   Any time we push new commits to the `main` branch, the site redeploys automatically.
+-   GitHub Pages is a good fit because the project is static (HTML/CSS/JS) and doesn’t require a backend or server-side processing.
+
 ## Credits
 
----
+These games were coded by the team members Brian, Stephen and Kevin.
