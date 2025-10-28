@@ -61,7 +61,7 @@ I then drew two boundary lines on the canvas and that was it the design was done
 
 I spent the most time on the AI player, trying to improve it, by not making it to hard or to easy.
 
-## Early Deign Car Crosser
+## Early Design Car Crosser
 
 Initially the game was designed to be like the game frogger, but over time the game turned into a game where you are a car driving while avoiding oncoming cars.
 
@@ -71,13 +71,15 @@ Early development included:
 2. Creating other shapes that moved around the screen acting as obstacles.
 3. Create events when the player square collided with an obstacle shape.
 
-![EarlyDevelopment1](assets/cargameAssets/cargameEarlyDev1.png)
+![cargameEarlyDevelopment1](assets/cargameAssets/cargameEarlyDev1.png)
 
 First I made a square which could be moved around the canvas with the wasd keys and added other moving shapes which bounced across the screen.
 
-![EarlyDevelopment2](assets/cargameAssets/cargameEarlyDev2.png)
+![cargameEarlyDevelopment2](assets/cargameAssets/cargameEarlyDev2.png)
 
 I then inplemented collision detection between the player and the other moving shapes. I then made the other shapes scroll and loop across the canvas, also added some roads and a background.
+
+![cargameMenu](assets/cargameAssets/cargameMenu.png)
 
 ## Features
 
@@ -96,6 +98,8 @@ I then inplemented collision detection between the player and the other moving s
 #### Pong
 
 ### Navigation & User Experience
+
+Car crosser navigation is done using the large button below the canvas which will take the user back to the main menu if they should choose. All user navigation within the actual game is done with key presses which are display in the game at the appropriate times.
 
 -   **Accessibility options**: graphical game menu
 -   …
