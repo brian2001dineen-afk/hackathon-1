@@ -158,7 +158,8 @@ Navigation for pong is simple, there is a start button to start the game. There 
 
 ### Browser Validation
 
-…
+We ran our html pages through
+![cargame.html](assets/images/cargamehtml.png)
 
 ## Known Bugs
 
