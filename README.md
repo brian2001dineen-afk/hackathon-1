@@ -158,8 +158,6 @@ Navigation for pong is simple, there is a start button to start the game. There 
 
 ### Browser Validation
 
-We ran our html pages through
-
 -   lobby.html
     ![lobby.html](assets/images/lobbyhtml.png)
 -   cargame.html
