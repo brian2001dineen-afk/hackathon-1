@@ -103,17 +103,32 @@ Early development included:
 
 ### Arcade Homepage
 
+The homepage acts as the central hub for the arcade. It uses a terminal-style interface where users can type commands such as `help`, `list`, or the name of a game to launch it. For users who prefer clicking, a graphical menu is also provided below the terminal. From this page, players can easily access all available games and return to it from any game at any time.
+
 …
 
 ### Fully-Functional Games
 
-…
+### Zipbomb
 
-#### Zipbomb
+-   **Description:** Navigate a red ball through moving obstacles to collect coins while avoiding enemies.
+-   **Controls:** Arrow keys to move.
+-   **Objective:** Collect all coins to complete the level.
+-   **Features:** Multiple levels, per-level enemy AI, collision detection, and level progression.
 
-#### Frogger
+### Frogger / Car Crosser
 
-#### Pong
+-   **Description:** Drive a car across lanes of traffic without crashing into oncoming cars.
+-   **Controls:** Arrow keys for movement.
+-   **Objective:** Reach the finish line safely.
+-   **Features:** Increasing difficulty, moving obstacles, simple scoring.
+
+### Pong
+
+-   **Description:** Classic pong game with player vs computer.
+-   **Controls:** Arrow keys or W/S to move your paddle.
+-   **Objective:** Score more points than the computer.
+-   **Features:** AI opponent, score tracking, start/reset buttons, simple sound effects.
 
 ### Navigation & User Experience
 
