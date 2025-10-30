@@ -53,7 +53,7 @@
     ].join("\n");
 
     const LEVEL_3 = [
-        "; title=zipbombr/lvls/money_sandwich.txt",
+        "; title=zipbomb/lvls/money_sandwich.txt",
         "; enemyTick=300",
         "###################",
         "#..v.v.v.v.v.v.v.Z#",
