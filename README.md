@@ -202,7 +202,17 @@ Navigation for pong is simple, there is a start button to start the game. There 
 
 ### Browser Validation
 
-…
+-   lobby.html
+    ![lobby.html](assets/images/lobbyhtml.png)
+-   cargame.html
+    ![cargame.html](assets/images/cargamehtml.png)
+-   zipbomb.html
+    ![zipbomb.html](assets/images/zipbombhtml.png)
+-   pong.html
+    ![pong.html](assets/images/ponghtml.png)
+
+-   Lighhouse
+    ![lighthouse](assets/images/lighthousetest.png)
 
 ---
 
