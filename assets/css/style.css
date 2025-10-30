@@ -62,7 +62,7 @@ body {
 
 .terminal-name {
     color: var(--col-2);
-    text-shadow: 2px black;
+    text-shadow: 2px;
     font-size: 0.9rem;
 }
 
