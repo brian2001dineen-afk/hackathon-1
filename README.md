@@ -1,4 +1,4 @@
-# Hackathon title
+# CodeInstitute Group Hackathon Project - Arcade Minigames
 
 > An arcade baked into a terminal interface, explore our three blast from the past classic recreations. From a game based on the classic Frogger, a Worlds Hardest Game callback, or back to the old faithful with classic pong.
 
