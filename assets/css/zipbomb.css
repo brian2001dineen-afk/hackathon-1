@@ -124,24 +124,6 @@ body {
     text-decoration: underline;
 }
 
-/* Cursor effect: blink the background between transparent and var(--cursor) */
-/* .cursor-line .cell-cursor {
-    background-color: transparent;
-    text-decoration: none;
-    animation: cursor-blink 1s steps(1, end) infinite;
-}
-
-@keyframes cursor-blink {
-    0%,
-    49% {
-        background-color: var(--cursor);
-    }
-    50%,
-    100% {
-        background-color: transparent;
-    }
-} */
-
 /* Scrollbars */
 .vim-viewport::-webkit-scrollbar {
     height: 12px;

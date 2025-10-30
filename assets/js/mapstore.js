@@ -7,7 +7,7 @@
 (function () {
     const LANDING = [
         "; title=zipbomb.rar",
-        "; fontsize=24",
+        "; fontsize=21",
         "   ________ ____  ____   ___  __  __ ____  ",
         "  |__  /_ _|  _ \\| __ ) / _ \\|  \\/  | __ ) ",
         "    / / | || |_) |  _ \\| | | | |\\/| |  _ \\ ",
@@ -16,12 +16,14 @@
         "",
         "         h j k l  or  Arrow Keys",
         "         pre/nxt  map:  J  /  L",
+        "       press : to open command line",
+        "     (try :help for a list of commands)",
         "",
         "  @       get to the z to start!         Z",
     ].join("\n");
 
     const LEVEL_1 = [
-        "; title=zipbomb.rar/lvls/babysteps.txt",
+        "; title=zipbomb/lvls/babysteps.txt",
         "; enemyTick=250",
         "################",
         "#@..$..v.......#",
@@ -34,7 +36,7 @@
     ].join("\n");
 
     const LEVEL_2 = [
-        "; title=zipbomb.rar/lvls/gottagofast.txt",
+        "; title=zipbomb/lvls/gottagofast.txt",
         "; enemyTick=250",
         "#####################",
         "#@....#...........#Z#",
@@ -51,7 +53,7 @@
     ].join("\n");
 
     const LEVEL_3 = [
-        "; title=zipbomb.rar/lvls/money_sandwich.txt",
+        "; title=zipbombr/lvls/money_sandwich.txt",
         "; enemyTick=300",
         "###################",
         "#..v.v.v.v.v.v.v.Z#",
@@ -65,7 +67,7 @@
     ].join("\n");
 
     const LEVEL_4 = [
-        "; title=zipbomb.rar/lvls/chaos.txt",
+        "; title=zipbomb/lvls/chaos.txt",
         "; enemyTick=180",
         "############################",
         "#@.........#.......>......Z#",
@@ -80,7 +82,7 @@
     ].join("\n");
 
     const LEVEL_5 = [
-        "; title=zipbomb.rar/lvls/hell.txt",
+        "; title=zipbomb/lvls/hell.txt",
         "; enemyTick=140",
         "#######################",
         "#@...............#....#",
@@ -96,7 +98,7 @@
     ].join("\n");
 
     const LEVEL_6 = [
-        "; title=zipbomb.rar/lvls/strafing.txt",
+        "; title=zipbomb/lvls/strafing.txt",
         "; enemyTick=40",
         "                .",
         "             _ .|.",
@@ -109,9 +111,9 @@
         "           /::|",
         "          /|Z|/|",
     ].join("\n");
-    
+
     const LEVEL_7 = [
-        "; title=zipbomb.rar/lvls/:3.txt",
+        "; title=zipbomb/lvls/:3.txt",
         "; enemyTick=100",
         "; fontsize=17",
         "#############################################################",
@@ -141,7 +143,7 @@
     ].join("\n");
 
     const LEVEL_8 = [
-        "; title=zipbomb.rar/lvls/gg.txt",
+        "; title=zipbomb/lvls/gg.txt",
         "; enemyTick=140",
         "; fontsize=14",
         "                                                                         ZZZZZZ                               ",
@@ -180,6 +182,6 @@
         LEVEL_5,
         LEVEL_6,
         LEVEL_7,
-        LEVEL_8
+        LEVEL_8,
     ];
 })();

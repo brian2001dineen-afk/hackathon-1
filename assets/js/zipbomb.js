@@ -489,7 +489,7 @@
             }
         }
         render();
-        setStatus(state.won ? "Victory! (press :q to exit)" : "");
+        setStatus(state.won ? "Victory! Press L to go to the next level." : "");
     }
 
     // Input handling: NORMAL mode with counts and hjkl motions
@@ -528,7 +528,7 @@
                 if (cmd === "q!") {
                     // Quit to lobby/index
                     window.location.href = "index.html";
-                } else if (cmd === "q") {
+                } else if (cmd === "r") {
                     // Restart current map from original text containing '@'
                     parseMapFromText(
                         state.originalText || mapInputEl?.value || ""
@@ -538,6 +538,12 @@
                     state.mode = "NORMAL";
                     state.cmdBuf = "";
                     setStatus("Restarted");
+                } else if (cmd === "help") {
+                    state.mode = "NORMAL";
+                    state.cmdBuf = "";
+                    setStatus(
+                        ":r to reset level. :zoom <number> to set zoom size. :q! to go back to the arcade."
+                    );
                 } else if (/^zoom\s+\d+$/i.test(cmd)) {
                     const n = parseInt(cmd.split(/\s+/)[1], 10);
                     if (Number.isFinite(n) && n > 6 && n < 64) {
